@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="bc5513a15d86445a95a9e8dcb0b8e983" Name="Diagram1">
+        <EntityTypeShape EntityType="R6TrackerModel.GameStat" Width="1.5" PointX="3" PointY="2.5" />
+        <EntityTypeShape EntityType="R6TrackerModel.MatchType" Width="1.5" PointX="0.75" PointY="4" />
+        <EntityTypeShape EntityType="R6TrackerModel.Player" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="R6TrackerModel.sysdiagram" Width="1.5" PointX="5.75" PointY="2.25" />
+        <AssociationConnector Association="R6TrackerModel.FK_GameStats_MatchType" />
+        <AssociationConnector Association="R6TrackerModel.FK_GameStats_Player" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
