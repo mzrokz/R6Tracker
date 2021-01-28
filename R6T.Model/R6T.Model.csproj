@@ -87,6 +87,7 @@
       <DependentUpon>R6TrackerModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MasterEnums.cs" />
+    <Compile Include="ViewModels\PlayerVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="R6TrackerModel.edmx">

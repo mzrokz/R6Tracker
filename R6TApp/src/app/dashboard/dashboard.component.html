@@ -1,0 +1,5 @@
+<p>dashboard works!</p>
+
+<div *ngFor="let player of players">
+  <span (click)="onPlayerClick(player,$event)">{{player.PlayerName}}</span>
+</div>

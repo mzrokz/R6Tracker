@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.Model", "R6T.Model\R6T.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.Service", "R6T.Service\R6T.Service.csproj", "{6B79C077-3591-4D28-B7AF-FA70DF976827}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.WebApi", "R6T.WebApi\R6T.WebApi.csproj", "{809D442B-044C-48ED-AAB6-8F1FB93018B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6B79C077-3591-4D28-B7AF-FA70DF976827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B79C077-3591-4D28-B7AF-FA70DF976827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B79C077-3591-4D28-B7AF-FA70DF976827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
