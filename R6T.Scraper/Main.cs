@@ -26,18 +26,15 @@ namespace R6T.Scraper
         {
             try
             {
-                await FetchChromium();
-                // Create an instance of the browser and configure launch options
-                browser = await Puppeteer.LaunchAsync(new LaunchOptions
-                {
-                    Headless = true
-                });
+                await InitPuppeteer();
 
-                var r6Model = new R6TrackerEntities();
-                var lstPlayers = r6Model.Players.Where(w => w.IsActive.Value).ToList();
-                foreach (var player in lstPlayers)
+                using (var r6Model = new R6TrackerEntities())
                 {
-                    await ScrapeUserData(player);
+                    var lstPlayers = r6Model.Players.Where(w => w.IsActive.Value).ToList();
+                    foreach (var player in lstPlayers)
+                    {
+                        await ScrapeUserData(player);
+                    }
                 }
             }
             catch (Exception e)
@@ -46,6 +43,16 @@ namespace R6T.Scraper
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public async Task InitPuppeteer()
+        {
+            await FetchChromium();
+            // Create an instance of the browser and configure launch options
+            browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            });
         }
 
         public async Task<Boolean> ScrapeUserData(Player oPlayer)
