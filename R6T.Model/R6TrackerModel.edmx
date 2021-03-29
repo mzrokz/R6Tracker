@@ -80,6 +80,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetPlayerGameStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlayerId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <EntityContainer Name="R6TrackerModelStoreContainer">
           <EntitySet Name="GameStats" EntityType="Self.GameStats" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MatchTypes" EntityType="Self.MatchTypes" Schema="dbo" store:Type="Tables" />
@@ -141,6 +144,9 @@
             <End Role="Player" EntitySet="Players" />
             <End Role="GameStat" EntitySet="GameStats" />
           </AssociationSet>
+          <FunctionImport Name="GetPlayerGameStats" ReturnType="Collection(R6TrackerModel.GetPlayerGameStats_Result)">
+            <Parameter Name="PlayerId" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -232,6 +238,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetPlayerGameStats_Result">
+          <Property Type="Guid" Name="PlayerId" Nullable="true" />
+          <Property Type="String" Name="PlayerName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MatchTypeId" Nullable="true" />
+          <Property Type="String" Name="MatchTypeName" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="PlayerLevel" Nullable="true" />
+          <Property Type="Int32" Name="MatchesPlayed" Nullable="true" />
+          <Property Type="Int32" Name="Wins" Nullable="true" />
+          <Property Type="String" Name="WinPercent" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="Losses" Nullable="true" />
+          <Property Type="Int32" Name="Kills" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="Int32" Name="Headshots" Nullable="true" />
+          <Property Type="String" Name="HeadshotPercent" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="MeleeKills" Nullable="true" />
+          <Property Type="Int32" Name="BlindKills" Nullable="true" />
+          <Property Type="Decimal" Name="KD" Nullable="true" Precision="4" Scale="2" />
+          <Property Type="Decimal" Name="KillPerMatch" Nullable="true" Precision="4" Scale="2" />
+          <Property Type="Decimal" Name="KillPerMin" Nullable="true" Precision="4" Scale="2" />
+          <Property Type="String" Name="TimePlayed" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="TotalXp" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int64" Name="LatestRecord" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -293,6 +323,34 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetPlayerGameStats" FunctionName="R6TrackerModel.Store.GetPlayerGameStats">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="R6TrackerModel.GetPlayerGameStats_Result">
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="PlayerName" ColumnName="PlayerName" />
+                <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />
+                <ScalarProperty Name="MatchTypeName" ColumnName="MatchTypeName" />
+                <ScalarProperty Name="PlayerLevel" ColumnName="PlayerLevel" />
+                <ScalarProperty Name="MatchesPlayed" ColumnName="MatchesPlayed" />
+                <ScalarProperty Name="Wins" ColumnName="Wins" />
+                <ScalarProperty Name="WinPercent" ColumnName="WinPercent" />
+                <ScalarProperty Name="Losses" ColumnName="Losses" />
+                <ScalarProperty Name="Kills" ColumnName="Kills" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="Headshots" ColumnName="Headshots" />
+                <ScalarProperty Name="HeadshotPercent" ColumnName="HeadshotPercent" />
+                <ScalarProperty Name="MeleeKills" ColumnName="MeleeKills" />
+                <ScalarProperty Name="BlindKills" ColumnName="BlindKills" />
+                <ScalarProperty Name="KD" ColumnName="KD" />
+                <ScalarProperty Name="KillPerMatch" ColumnName="KillPerMatch" />
+                <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
+                <ScalarProperty Name="TimePlayed" ColumnName="TimePlayed" />
+                <ScalarProperty Name="TotalXp" ColumnName="TotalXp" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LatestRecord" ColumnName="LatestRecord" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

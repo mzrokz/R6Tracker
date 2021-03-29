@@ -54,6 +54,9 @@
     <Compile Include="GameStat.cs">
       <DependentUpon>R6TrackerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetPlayerGameStats_Result.cs">
+      <DependentUpon>R6TrackerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>R6TrackerModel.tt</DependentUpon>
     </Compile>

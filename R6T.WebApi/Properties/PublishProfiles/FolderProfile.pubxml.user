@@ -4,7 +4,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_PublishTargetUrl>H:\Work\R6Tracker\Publish</_PublishTargetUrl>
+    <_PublishTargetUrl>H:\Work\R6Tracker\Publish\Backend</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/HelpPage/HelpPage.css">
@@ -76,6 +76,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="bin/Antlr3.Runtime.pdb">
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
+    <File Include="bin/AutoMapper.dll">
+      <publishTime>10/26/2015 21:51:50</publishTime>
+    </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>09/11/2013 09:10:04</publishTime>
     </File>
@@ -92,19 +95,19 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/22/2019 01:06:16</publishTime>
     </File>
     <File Include="bin/R6T.Model.dll">
-      <publishTime>01/28/2021 03:25:09</publishTime>
+      <publishTime>03/29/2021 05:42:47</publishTime>
     </File>
     <File Include="bin/R6T.Model.dll.config">
       <publishTime>01/27/2021 03:13:26</publishTime>
     </File>
     <File Include="bin/R6T.Model.pdb">
-      <publishTime>01/28/2021 03:25:09</publishTime>
+      <publishTime>03/29/2021 05:42:47</publishTime>
     </File>
     <File Include="bin/R6T.WebApi.dll">
-      <publishTime>01/28/2021 03:25:09</publishTime>
+      <publishTime>03/29/2021 05:42:47</publishTime>
     </File>
     <File Include="bin/R6T.WebApi.pdb">
-      <publishTime>01/28/2021 03:25:09</publishTime>
+      <publishTime>03/29/2021 05:42:47</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>08/08/2018 05:38:48</publishTime>
@@ -256,8 +259,14 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>11/28/2018 13:00:36</publishTime>
     </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>11/28/2018 12:58:44</publishTime>
+    </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>11/28/2018 13:01:26</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
       <publishTime>11/28/2018 13:01:00</publishTime>
@@ -377,7 +386,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>01/28/2021 03:19:53</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/28/2021 03:25:09</publishTime>
+      <publishTime>03/29/2021 05:42:47</publishTime>
     </File>
   </ItemGroup>
 </Project>

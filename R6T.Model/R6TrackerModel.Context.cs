@@ -134,5 +134,14 @@ namespace R6T.Model
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
+    
+        public virtual ObjectResult<GetPlayerGameStats_Result> GetPlayerGameStats(Nullable<System.Guid> playerId)
+        {
+            var playerIdParameter = playerId.HasValue ?
+                new ObjectParameter("PlayerId", playerId) :
+                new ObjectParameter("PlayerId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPlayerGameStats_Result>("GetPlayerGameStats", playerIdParameter);
+        }
     }
 }

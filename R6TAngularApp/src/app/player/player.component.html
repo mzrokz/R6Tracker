@@ -1,0 +1,60 @@
+<div>
+  <div *ngFor="let player of players">
+    <span>{{player.PlayerName}}</span>
+    <button (click)="getPlayerGameStats(player)">Get Data</button>
+  </div>
+</div>
+
+<div>
+  <!-- (onContentReady)="contentReady($event)" -->
+  <dx-data-grid id="gridContainer" [dataSource]="playerGameStats" [remoteOperations]="false"
+    [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true">
+
+    <!-- <dxo-paging [pageSize]="10"></dxo-paging> -->
+    <!-- <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager> -->
+    <!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+
+    <dxi-column dataField="PlayerLevel"></dxi-column>
+    <dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
+    <dxi-column dataField="MatchTypeName"></dxi-column>
+    <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
+    <dxi-column dataField="MatchesPlayed"></dxi-column>
+    <dxi-column dataField="KD"></dxi-column>
+    <dxi-column dataField="Kills"></dxi-column>
+    <dxi-column dataField="Deaths"></dxi-column>
+    <dxi-column dataField="Wins"></dxi-column>
+    <dxi-column dataField="Losses"></dxi-column>
+    <dxi-column dataField="WinPercent"></dxi-column>
+    <dxi-column dataField="BlindKills"></dxi-column>
+    <dxi-column dataField="HeadshotPercent"></dxi-column>
+    <dxi-column dataField="Headshots"></dxi-column>
+    <dxi-column dataField="KillPerMatch"></dxi-column>
+    <dxi-column dataField="KillPerMin"></dxi-column>
+    <dxi-column dataField="MeleeKills"></dxi-column>
+    <dxi-column dataField="TimePlayed"></dxi-column>
+    <dxi-column dataField="TotalXp"></dxi-column>
+    <dxi-column dataField="LatestRecord"></dxi-column>
+
+
+    <div *dxTemplate="let d of 'dateCellTemplate'">
+      <span>{{d.value | date: "dd MMM YY"}}</span>
+    </div>
+
+    <div *dxTemplate="let d of 'matchTypeCellTemplate'">
+      <div *ngIf="d.value==1" class="">
+        General
+      </div>
+      <div *ngIf="d.value==2" class="">
+        Ranked
+      </div>
+      <div *ngIf="d.value==3" class="">
+        Unranked
+      </div>
+      <div *ngIf="d.value==4" class="">
+        Casual
+      </div>
+    </div>
+  </dx-data-grid>
+</div>

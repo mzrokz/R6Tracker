@@ -41,11 +41,13 @@ namespace R6T.WebApi.Controllers
         {
             using (var oEntity = new R6TrackerEntities())
             {
-                var gameStats = oEntity.GameStats.Where(w => w.PlayerId == playerId).ToList();
+                //var gameStats = oEntity.GameStats.Where(w => w.PlayerId == playerId).ToList();
 
-                var lstGameStatsVm = Mapper.Map<List<GameStatsVm>>(gameStats);
+                var gameStats = oEntity.GetPlayerGameStats(playerId);
 
-                return Ok(lstGameStatsVm);
+                //var lstGameStatsVm = Mapper.Map<List<GameStatsVm>>(gameStats);
+
+                return Ok(gameStats);
             }
         }
     }
