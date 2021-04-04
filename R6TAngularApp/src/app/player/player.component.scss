@@ -1,0 +1,8 @@
+.player {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  &:hover {
+    background-color: aquamarine;
+  }
+}

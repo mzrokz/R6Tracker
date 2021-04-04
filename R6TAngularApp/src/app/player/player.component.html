@@ -1,7 +1,11 @@
 <div>
-  <div *ngFor="let player of players">
+  <div class="player" *ngFor="let player of players">
     <span>{{player.PlayerName}}</span>
     <button (click)="getPlayerGameStats(player)">Get Data</button>
+    <button (click)="syncPlayerData(player)" tooltip="asdadasd">Sync Player Data</button>
+    <fa-icon *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"></fa-icon>
+    <fa-icon *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
+    <fa-icon *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
   </div>
 </div>
 
@@ -10,9 +14,10 @@
   <dx-data-grid id="gridContainer" [dataSource]="playerGameStats" [remoteOperations]="false"
     [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true">
 
-    <!-- <dxo-paging [pageSize]="10"></dxo-paging> -->
-    <!-- <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager> -->
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
     <!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
     <dxo-group-panel [visible]="true"></dxo-group-panel>
     <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
 
@@ -40,6 +45,7 @@
 
     <div *dxTemplate="let d of 'dateCellTemplate'">
       <span>{{d.value | date: "dd MMM YY"}}</span>
+      <!-- <span>{{d.value}}</span> -->
     </div>
 
     <div *dxTemplate="let d of 'matchTypeCellTemplate'">

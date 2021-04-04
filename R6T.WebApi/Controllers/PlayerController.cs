@@ -6,8 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Results;
+using PuppeteerSharp;
+using R6T.Scraper;
 
 namespace R6T.WebApi.Controllers
 {
@@ -49,6 +53,36 @@ namespace R6T.WebApi.Controllers
 
                 return Ok(gameStats);
             }
+        }
+
+        [HttpPost, Route("api/Player/SyncPlayerData")]
+        public async Task<IHttpActionResult> SyncPlayerData(Player oPlayer)
+        {
+            if (oPlayer != null)
+            {
+                try
+                {
+                    var oScraper = new Main();
+                    await oScraper.InitPuppeteer();
+
+                    //await oScraper.FetchChromium(new BrowserFetcherOptions(
+                    //{
+                    //    Path = Server.MapPath
+                    //}));
+                    var result = await oScraper.ScrapeUserData(oPlayer);
+                    if (!result)
+                    {
+                        return BadRequest("Not Synced");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            return Ok();
         }
     }
 }

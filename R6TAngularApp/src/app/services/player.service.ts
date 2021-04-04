@@ -18,4 +18,8 @@ export class PlayerService {
   getPlayerGameStats(playerId: any) {
     return this.http.get<any>(environment.apiUrl + 'api/Player/GetGameStats?playerId=' + playerId)
   }
+
+  syncPlayerData(player: any) {
+    return this.http.post<any>(environment.apiUrl + 'api/Player/SyncPlayerData', player);
+  }
 }

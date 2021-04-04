@@ -17,8 +17,12 @@ namespace R6T.Scraper
         {
 
         }
-        public async Task<RevisionInfo> FetchChromium()
+        public async Task<RevisionInfo> FetchChromium(BrowserFetcherOptions options = null)
         {
+            if (options != null)
+            {
+                return await new BrowserFetcher(options).DownloadAsync(BrowserFetcher.DefaultRevision);
+            }
             return await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
         }
 
@@ -59,21 +63,69 @@ namespace R6T.Scraper
         {
             // Create a new page and go to Bing Maps
             Page page = await browser.NewPageAsync();
-            await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}");
-            string html = await page.GetContentAsync();
+            try
+            {
+                var arrWaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.DOMContentLoaded };
+                var timeout = 1000 * 60 * 5;
+                await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
+                string html = await page.GetContentAsync();
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(html);
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(html);
 
-            var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
+                var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
 
-            ExtractGeneralStats(oPlayer, htmlDoc);
-            ExtractRankedStats(oPlayer, htmlDoc);
-            ExtractUnRankedStats(oPlayer, htmlDoc);
-            ExtractCasualStats(oPlayer, htmlDoc);
-
-            await page.CloseAsync();
+                if (DoesPlayerExists(htmlDoc))
+                {
+                    if (DoesNewDataExists(oPlayer, htmlDoc))
+                    {
+                        ExtractGeneralStats(oPlayer, htmlDoc);
+                        ExtractRankedStats(oPlayer, htmlDoc);
+                        ExtractUnRankedStats(oPlayer, htmlDoc);
+                        ExtractCasualStats(oPlayer, htmlDoc);
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                await page.CloseAsync();
+            }
             return true;
+        }
+
+        public bool DoesPlayerExists(HtmlDocument htmlDoc)
+        {
+            var playerName = htmlDoc.DocumentNode.SelectSingleNode("//h1[@class='trn-profile-header__name']//span[1]");
+            if (playerName != null && !String.IsNullOrEmpty(playerName.InnerText))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DoesNewDataExists(Player oPlayer, HtmlDocument htmlDoc)
+        {
+            var oGeneralGameStat = new GameStat();
+            oGeneralGameStat.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPMatchesPlayed']").InnerHtml.ToInt32();
+            using (var r6Model = new R6TrackerEntities())
+            {
+                var oGameStat = r6Model.GameStats.Where(w => w.PlayerId == oPlayer.PlayerId && w.MatchTypeId == 1).OrderByDescending(o => o.CreatedDate).FirstOrDefault();
+                if (oGameStat.MatchesPlayed < oGeneralGameStat.MatchesPlayed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void ExtractGeneralStats(Player oPlayer, HtmlDocument htmlDoc)
