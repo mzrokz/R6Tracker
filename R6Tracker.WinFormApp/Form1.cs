@@ -54,8 +54,8 @@ namespace R6Tracker.WinFormApp
                 if (!String.IsNullOrEmpty(alias))
                 {
                     var oMain = new Main();
-                    await oMain.InitPuppeteer();
-                    await oMain.ScrapeUserData(row);
+                    oMain.InitSelenium();
+                    oMain.ScrapeUserData(row);
                 }
                 else
                 {

@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="GameStat.cs">
       <DependentUpon>R6TrackerModel.tt</DependentUpon>

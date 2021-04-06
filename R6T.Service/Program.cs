@@ -20,6 +20,8 @@ namespace R6T.Service
                 new ScraperSvc()
             };
             ServiceBase.Run(ServicesToRun);
+            // var oScraper = new Scraper.Main();
+            // oScraper.Start();
         }
     }
 }

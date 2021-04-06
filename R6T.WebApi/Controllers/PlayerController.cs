@@ -63,13 +63,13 @@ namespace R6T.WebApi.Controllers
                 try
                 {
                     var oScraper = new Main();
-                    await oScraper.InitPuppeteer();
+                    oScraper.InitSelenium();
 
                     //await oScraper.FetchChromium(new BrowserFetcherOptions(
                     //{
                     //    Path = Server.MapPath
                     //}));
-                    var result = await oScraper.ScrapeUserData(oPlayer);
+                    var result = oScraper.ScrapeUserData(oPlayer);
                     if (!result)
                     {
                         return BadRequest("Not Synced");

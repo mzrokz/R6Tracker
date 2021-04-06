@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using PuppeteerSharp;
+using PropertyInfo = System.Reflection.PropertyInfo;
 using R6T.Model;
 using R6T.Model.ViewModels;
 
@@ -12,63 +15,66 @@ namespace R6T.Scraper
 {
     public class Main
     {
-        private Browser browser;
+        private IWebDriver browser;
+
         public Main()
         {
-
         }
+
         public async Task<RevisionInfo> FetchChromium(BrowserFetcherOptions options = null)
         {
             if (options != null)
             {
                 return await new BrowserFetcher(options).DownloadAsync(BrowserFetcher.DefaultRevision);
             }
+
             return await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
         }
 
-        public async void Start()
+        public void Start()
         {
             try
             {
-                await InitPuppeteer();
+                InitSelenium();
 
                 using (var r6Model = new R6TrackerEntities())
                 {
                     var lstPlayers = r6Model.Players.Where(w => w.IsActive.Value).ToList();
                     foreach (var player in lstPlayers)
                     {
-                        await ScrapeUserData(player);
+                        ScrapeUserData(player);
                     }
                 }
+
+                // var player = new Player();
+                // player.Alias = "Soldier_1st";
+                // ScrapeUserData(player);
             }
             catch (Exception e)
             {
-                await browser.CloseAsync();
+                browser.Close();
                 Console.WriteLine(e);
                 throw;
             }
         }
 
-        public async Task InitPuppeteer()
+        public void InitSelenium()
         {
-            await FetchChromium();
-            // Create an instance of the browser and configure launch options
-            browser = await Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true
-            });
+            browser = new ChromeDriver();
         }
 
-        public async Task<Boolean> ScrapeUserData(Player oPlayer)
+        public bool ScrapeUserData(Player oPlayer)
         {
             // Create a new page and go to Bing Maps
-            Page page = await browser.NewPageAsync();
+            // Page page = await browser.NewPageAsync();
             try
             {
-                var arrWaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.DOMContentLoaded };
+                var arrWaitUntil = new WaitUntilNavigation[] {WaitUntilNavigation.DOMContentLoaded};
                 var timeout = 1000 * 60 * 5;
-                await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
-                string html = await page.GetContentAsync();
+                browser.Url = $"https://r6.tracker.network/profile/pc/{oPlayer.Alias}";
+                // await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
+                // string html = await page.GetContentAsync();
+                string html = browser.PageSource;
 
                 var htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(html);
@@ -79,10 +85,7 @@ namespace R6T.Scraper
                 {
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                        ExtractGeneralStats(oPlayer, htmlDoc);
-                        ExtractRankedStats(oPlayer, htmlDoc);
-                        ExtractUnRankedStats(oPlayer, htmlDoc);
-                        ExtractCasualStats(oPlayer, htmlDoc);
+                        ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
                     }
                 }
                 else
@@ -96,8 +99,9 @@ namespace R6T.Scraper
             }
             finally
             {
-                await page.CloseAsync();
+                // await page.CloseAsync();
             }
+
             return true;
         }
 
@@ -115,10 +119,12 @@ namespace R6T.Scraper
         public bool DoesNewDataExists(Player oPlayer, HtmlDocument htmlDoc)
         {
             var oGeneralGameStat = new GameStat();
-            oGeneralGameStat.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPMatchesPlayed']").InnerHtml.ToInt32();
+            oGeneralGameStat.MatchesPlayed = htmlDoc.DocumentNode
+                .SelectSingleNode("//div[@data-stat='PVPMatchesPlayed']").InnerHtml.ToInt32();
             using (var r6Model = new R6TrackerEntities())
             {
-                var oGameStat = r6Model.GameStats.Where(w => w.PlayerId == oPlayer.PlayerId && w.MatchTypeId == 1).OrderByDescending(o => o.CreatedDate).FirstOrDefault();
+                var oGameStat = r6Model.GameStats.Where(w => w.PlayerId == oPlayer.PlayerId && w.MatchTypeId == 1)
+                    .OrderByDescending(o => o.CreatedDate).FirstOrDefault();
                 if (oGameStat.MatchesPlayed < oGeneralGameStat.MatchesPlayed)
                 {
                     return true;
@@ -128,114 +134,57 @@ namespace R6T.Scraper
             return false;
         }
 
-        public void ExtractGeneralStats(Player oPlayer, HtmlDocument htmlDoc)
+        public void CheckDataType(Type type, PropertyInfo prop, object instance, string data)
         {
-            //----------------------------------------------- General Stats -----------------------------------------------
-            var oGeneralGameStat = new GameStat();
-            oGeneralGameStat.GameStatId = Guid.NewGuid();
-            oGeneralGameStat.PlayerId = oPlayer.PlayerId;
-            oGeneralGameStat.MatchTypeId = (int)EMatchType.General;
-            oGeneralGameStat.PlayerLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='trn-defstat__value']").InnerHtml.ToInt32();
-            oGeneralGameStat.Kills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPKills']").InnerHtml.ToInt32();
-            oGeneralGameStat.HeadshotPercent = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPAccuracy']").InnerHtml;
-            oGeneralGameStat.KD = htmlDoc.DocumentNode.SelectSingleNode("(//div[@data-stat='PVPKDRatio'])[2]").InnerHtml.ToDecimal();
-            oGeneralGameStat.Deaths = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPDeaths']").InnerHtml.ToInt32();
-            oGeneralGameStat.Headshots = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPHeadshots']").InnerHtml.ToInt32();
-            oGeneralGameStat.Wins = htmlDoc.DocumentNode.SelectSingleNode("(//div[@data-stat='PVPMatchesWon'])[2]").InnerHtml.ToInt32();
-            oGeneralGameStat.Losses = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPMatchesLost']").InnerHtml.ToInt32();
-            oGeneralGameStat.WinPercent = htmlDoc.DocumentNode.SelectSingleNode("(//div[@data-stat='PVPWLRatio'])[2]").InnerHtml;
-            oGeneralGameStat.TimePlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPTimePlayed']").InnerHtml;
-            oGeneralGameStat.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPMatchesPlayed']").InnerHtml.ToInt32();
-            oGeneralGameStat.TotalXp = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPTotalXp']").InnerHtml;
-            oGeneralGameStat.MeleeKills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPMeleeKills']").InnerHtml.ToInt32();
-            oGeneralGameStat.BlindKills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='PVPBlindKills']").InnerHtml.ToInt32();
-            oGeneralGameStat.CreatedDate = DateTime.Now;
-
-            using (var r6Model = new R6TrackerEntities())
+            if (typeof(int?).IsAssignableFrom(prop.PropertyType))
             {
-                r6Model.GameStats.Add(oGeneralGameStat);
-                r6Model.SaveChanges();
+                prop.SetValue(instance, data.ToInt32(), null);
+            }
+            else if (typeof(decimal?).IsAssignableFrom(prop.PropertyType))
+            {
+                prop.SetValue(instance, data.ToDecimal(), null);
+            }
+            else
+            {
+                prop.SetValue(instance, data, null);
             }
         }
 
-        public void ExtractRankedStats(Player oPlayer, HtmlDocument htmlDoc)
+        public void ExtractStats(HtmlDocument htmlDoc, Player oPlayer, Type type)
         {
-            //----------------------------------------------- Ranked Stats -----------------------------------------------
-            var oRankedGameStat = new GameStat();
-            oRankedGameStat.GameStatId = Guid.NewGuid();
-            oRankedGameStat.PlayerId = oPlayer.PlayerId;
-            oRankedGameStat.MatchTypeId = (int)EMatchType.Ranked;
-            oRankedGameStat.PlayerLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='trn-defstat__value']").InnerHtml.ToInt32();
-            oRankedGameStat.TimePlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedTimePlayed']").InnerHtml;
-            oRankedGameStat.Wins = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedWins']").InnerHtml.ToInt32();
-            oRankedGameStat.Losses = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedLosses']").InnerHtml.ToInt32();
-            oRankedGameStat.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedMatches']").InnerHtml.ToInt32();
-            oRankedGameStat.Deaths = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedDeaths']").InnerHtml.ToInt32();
-            oRankedGameStat.Kills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedKills']").InnerHtml.ToInt32();
-            oRankedGameStat.WinPercent = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedWLRatio']").InnerHtml;
-            oRankedGameStat.KD = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedKDRatio']").InnerHtml.ToDecimal();
-            oRankedGameStat.KillPerMatch = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedKillsPerMatch']").InnerHtml.ToDecimal();
-            oRankedGameStat.KillPerMin = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='RankedKillsPerMinute']").InnerHtml.ToDecimal();
-            oRankedGameStat.CreatedDate = DateTime.Now;
+            var dbi = type.GetCustomAttributes(false).First() as AttachXPath;
 
-            using (var r6Model = new R6TrackerEntities())
+            for (var i = 0; i < dbi?.StatType.Length; i++)
             {
-                r6Model.GameStats.Add(oRankedGameStat);
-                r6Model.SaveChanges();
-            }
-        }
+                var stat = dbi.StatType[i];
+                var instance = Activator.CreateInstance(type);
+                foreach (var property in type.GetProperties())
+                {
+                    var attr = property.GetCustomAttributes(false);
 
-        public void ExtractUnRankedStats(Player oPlayer, HtmlDocument htmlDoc)
-        {
-            //----------------------------------------------- Un-Ranked Stats -----------------------------------------------
-            var oUnrankedGameStat = new GameStat();
-            oUnrankedGameStat.GameStatId = Guid.NewGuid();
-            oUnrankedGameStat.PlayerId = oPlayer.PlayerId;
-            oUnrankedGameStat.MatchTypeId = (int)EMatchType.Unranked;
-            oUnrankedGameStat.PlayerLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='trn-defstat__value']").InnerHtml.ToInt32();
-            oUnrankedGameStat.TimePlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedTimePlayed']").InnerHtml;
-            oUnrankedGameStat.Wins = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedWins']").InnerHtml.ToInt32();
-            oUnrankedGameStat.Losses = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedlLosses']").InnerHtml.ToInt32();
-            oUnrankedGameStat.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedMatches']").InnerHtml.ToInt32();
-            oUnrankedGameStat.Deaths = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedDeaths']").InnerHtml.ToInt32();
-            oUnrankedGameStat.Kills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedKills']").InnerHtml.ToInt32();
-            oUnrankedGameStat.WinPercent = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedWLRatio']").InnerHtml;
-            oUnrankedGameStat.KD = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedKDRatio']").InnerHtml.ToDecimal();
-            oUnrankedGameStat.KillPerMatch = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedKillsPerMatch']").InnerHtml.ToDecimal();
-            oUnrankedGameStat.KillPerMin = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='UnRankedKillsPerMinute']").InnerHtml.ToDecimal();
-            oUnrankedGameStat.CreatedDate = DateTime.Now;
+                    var propertyDbi = attr.Length > 0 ? attr.First() as AttachXPath : null;
+                    if (propertyDbi?.XPath.Length > 0)
+                    {
+                        var xpath = propertyDbi.XPath[i];
+                        if (xpath != "")
+                        {
+                            var data = htmlDoc.DocumentNode.SelectSingleNode(propertyDbi.XPath[i]).InnerHtml;
+                            CheckDataType(type, property, instance, data);
+                        }
+                    }
+                }
 
-            using (var r6Model = new R6TrackerEntities())
-            {
-                r6Model.GameStats.Add(oUnrankedGameStat);
-                r6Model.SaveChanges();
-            }
-        }
+                var oGameStat = instance as GameStat;
+                oGameStat.GameStatId = Guid.NewGuid();
+                oGameStat.PlayerId = oPlayer.PlayerId;
+                oGameStat.MatchTypeId = (int) stat;
+                oGameStat.CreatedDate = DateTime.Now;
 
-        public void ExtractCasualStats(Player oPlayer, HtmlDocument htmlDoc)
-        {
-            //----------------------------------------------- Casual Stats -----------------------------------------------
-            var oQuickMatch = new GameStat();
-            oQuickMatch.GameStatId = Guid.NewGuid();
-            oQuickMatch.PlayerId = oPlayer.PlayerId;
-            oQuickMatch.MatchTypeId = (int)EMatchType.Casual;
-            oQuickMatch.PlayerLevel = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='trn-defstat__value']").InnerHtml.ToInt32();
-            oQuickMatch.TimePlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualTimePlayed']").InnerHtml;
-            oQuickMatch.Wins = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualWins']").InnerHtml.ToInt32();
-            oQuickMatch.Losses = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualLosses']").InnerHtml.ToInt32();
-            oQuickMatch.MatchesPlayed = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualMatches']").InnerHtml.ToInt32();
-            oQuickMatch.Deaths = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualDeaths']").InnerHtml.ToInt32();
-            oQuickMatch.Kills = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualKills']").InnerHtml.ToInt32();
-            oQuickMatch.WinPercent = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualWLRatio']").InnerHtml;
-            oQuickMatch.KD = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualKDRatio']").InnerHtml.ToDecimal();
-            oQuickMatch.KillPerMatch = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualKillsPerMatch']").InnerHtml.ToDecimal();
-            oQuickMatch.KillPerMin = htmlDoc.DocumentNode.SelectSingleNode("//div[@data-stat='CasualKillsPerMinute']").InnerHtml.ToDecimal();
-            oQuickMatch.CreatedDate = DateTime.Now;
-
-            using (var r6Model = new R6TrackerEntities())
-            {
-                r6Model.GameStats.Add(oQuickMatch);
-                r6Model.SaveChanges();
+                using (var r6Model = new R6TrackerEntities())
+                {
+                    r6Model.GameStats.Add(oGameStat);
+                    r6Model.SaveChanges();
+                }
             }
         }
     }
