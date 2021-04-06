@@ -165,7 +165,7 @@ namespace R6T.Scraper
                     var propertyDbi = attr.Length > 0 ? attr.First() as AttachXPath : null;
                     if (propertyDbi?.XPath.Length > 0)
                     {
-                        var xpath = propertyDbi.XPath[i];
+                        var xpath = propertyDbi.XPath.ElementAtOrDefault(i);
                         if (xpath != "")
                         {
                             var data = htmlDoc.DocumentNode.SelectSingleNode(propertyDbi.XPath[i]).InnerHtml;
