@@ -63,6 +63,18 @@ namespace R6T.Scraper
             browser = new ChromeDriver();
         }
 
+        public void MonkeyPatchInterval()
+        {
+            IJavaScriptExecutor executor = (IJavaScriptExecutor) browser;
+
+            string monkeyPatchScript =
+                "window.profileApp.initRefresh = function () {var self = this; console.log('Monkey Patched'); clearInterval(self.refreshIntervalHandle);}";
+            string executeScript = "window.profileApp.initRefresh();";
+
+            executor.ExecuteScript(monkeyPatchScript);
+            executor.ExecuteAsyncScript(executeScript);
+        }
+
         public bool ScrapeUserData(Player oPlayer)
         {
             // Create a new page and go to Bing Maps
@@ -74,6 +86,7 @@ namespace R6T.Scraper
                 browser.Url = $"https://r6.tracker.network/profile/pc/{oPlayer.Alias}";
                 // await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
                 // string html = await page.GetContentAsync();
+                MonkeyPatchInterval();
                 string html = browser.PageSource;
 
                 var htmlDoc = new HtmlDocument();
@@ -85,7 +98,7 @@ namespace R6T.Scraper
                 {
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                        ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
+                    ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
                     }
                 }
                 else
