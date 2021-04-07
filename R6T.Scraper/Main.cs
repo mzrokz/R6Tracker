@@ -58,14 +58,21 @@ namespace R6T.Scraper
             }
         }
 
-        public void InitSelenium()
+        public void InitSelenium(string path = "")
         {
-            browser = new ChromeDriver();
+            if (!String.IsNullOrEmpty(path))
+            {
+                browser = new ChromeDriver(path);
+            }
+            else
+            {
+                browser = new ChromeDriver();
+            }
         }
 
         public void MonkeyPatchInterval()
         {
-            IJavaScriptExecutor executor = (IJavaScriptExecutor) browser;
+            IJavaScriptExecutor executor = (IJavaScriptExecutor)browser;
 
             string monkeyPatchScript =
                 "window.profileApp.initRefresh = function () {var self = this; console.log('Monkey Patched'); clearInterval(self.refreshIntervalHandle);}";
@@ -81,7 +88,7 @@ namespace R6T.Scraper
             // Page page = await browser.NewPageAsync();
             try
             {
-                var arrWaitUntil = new WaitUntilNavigation[] {WaitUntilNavigation.DOMContentLoaded};
+                //var arrWaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.DOMContentLoaded };
                 var timeout = 1000 * 60 * 5;
                 browser.Url = $"https://r6.tracker.network/profile/pc/{oPlayer.Alias}";
                 // await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
@@ -98,7 +105,7 @@ namespace R6T.Scraper
                 {
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                    ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
+                        ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
                     }
                 }
                 else
@@ -190,7 +197,7 @@ namespace R6T.Scraper
                 var oGameStat = instance as GameStat;
                 oGameStat.GameStatId = Guid.NewGuid();
                 oGameStat.PlayerId = oPlayer.PlayerId;
-                oGameStat.MatchTypeId = (int) stat;
+                oGameStat.MatchTypeId = (int)stat;
                 oGameStat.CreatedDate = DateTime.Now;
 
                 using (var r6Model = new R6TrackerEntities())
