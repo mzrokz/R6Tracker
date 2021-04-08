@@ -60,7 +60,10 @@ namespace R6T.Scraper
 
         public void InitSelenium()
         {
-            browser = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.PageLoadStrategy = PageLoadStrategy.Eager;
+            options.AddArgument("--headless");
+            browser = new ChromeDriver(options);
         }
 
         public void MonkeyPatchInterval()
@@ -98,7 +101,7 @@ namespace R6T.Scraper
                 {
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                    ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
+                        ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
                     }
                 }
                 else
@@ -112,7 +115,7 @@ namespace R6T.Scraper
             }
             finally
             {
-                // await page.CloseAsync();
+                browser.Quit();
             }
 
             return true;
