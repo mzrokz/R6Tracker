@@ -35,7 +35,8 @@ namespace R6T.WebApi.Controllers
                     PlayerId = s.PlayerId,
                     Alias = s.Alias,
                     PlayerName = s.PlayerName,
-                    IsActive = s.IsActive
+                    IsActive = s.IsActive,
+                    Url = s.Url
                 });
                 return Ok(players);
             }
@@ -71,7 +72,7 @@ namespace R6T.WebApi.Controllers
                     //{
                     //    Path = Server.MapPath
                     //}));
-                    var result = oScraper.ScrapeUserData(oPlayer);
+                    var result = await oScraper.ScrapeUserData(oPlayer);
                     if (!result)
                     {
                         return BadRequest("Not Synced");

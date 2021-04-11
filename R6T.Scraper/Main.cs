@@ -19,6 +19,7 @@ namespace R6T.Scraper
 
         public Main()
         {
+            MapperProfile.CreateConfiguration();
         }
 
         public async Task<RevisionInfo> FetchChromium(BrowserFetcherOptions options = null)
@@ -31,7 +32,7 @@ namespace R6T.Scraper
             return await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
         }
 
-        public void Start()
+        public async void Start()
         {
             try
             {
@@ -42,7 +43,7 @@ namespace R6T.Scraper
                     var lstPlayers = r6Model.Players.Where(w => w.IsActive.Value).ToList();
                     foreach (var player in lstPlayers)
                     {
-                        ScrapeUserData(player);
+                        await ScrapeUserData(player);
                     }
                 }
 
@@ -73,42 +74,35 @@ namespace R6T.Scraper
             }
         }
 
-        public void MonkeyPatchInterval()
-        {
-            IJavaScriptExecutor executor = (IJavaScriptExecutor) browser;
 
-            string monkeyPatchScript =
-                "window.profileApp.initRefresh = function () {var self = this; console.log('Monkey Patched'); clearInterval(self.refreshIntervalHandle);}";
-            string executeScript = "window.profileApp.initRefresh();";
 
-            executor.ExecuteScript(monkeyPatchScript);
-            executor.ExecuteAsyncScript(executeScript);
-        }
-
-        public bool ScrapeUserData(Player oPlayer)
+        public async Task<bool> ScrapeUserData(Player oPlayer)
         {
             // Create a new page and go to Bing Maps
             // Page page = await browser.NewPageAsync();
             try
             {
-                var arrWaitUntil = new WaitUntilNavigation[] {WaitUntilNavigation.DOMContentLoaded};
-                var timeout = 1000 * 60 * 5;
-                browser.Url = $"https://r6.tracker.network/profile/pc/{oPlayer.Alias}";
-                // await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
-                // string html = await page.GetContentAsync();
-                MonkeyPatchInterval();
-                string html = browser.PageSource;
+                if (String.IsNullOrEmpty(oPlayer.Url))
+                {
+                    return false;
+                }
 
+                browser.Url = oPlayer.Url;
+                using (var oScraperFunction = new ScraperFunctions())
+                {
+                    //oScraperFunction.MonkeyPatchInterval(browser);
+                }
+
+                string html = browser.PageSource;
                 var htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(html);
-
-                var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
+                //var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
 
                 if (DoesPlayerExists(htmlDoc))
                 {
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                        ExtractStats(htmlDoc, oPlayer, typeof(GameStat));
+                        ExtractStats(htmlDoc, oPlayer, typeof(GameStatsVm));
                     }
                 }
                 else
@@ -189,18 +183,22 @@ namespace R6T.Scraper
                     if (propertyDbi?.XPath.Length > 0)
                     {
                         var xpath = propertyDbi.XPath.ElementAtOrDefault(i);
-                        if (xpath != "")
+                        if (!string.IsNullOrEmpty(xpath))
                         {
-                            var data = htmlDoc.DocumentNode.SelectSingleNode(propertyDbi.XPath[i]).InnerHtml;
+                            var data = htmlDoc.DocumentNode.SelectSingleNode(xpath).InnerHtml;
                             CheckDataType(type, property, instance, data);
                         }
                     }
                 }
 
-                var oGameStat = instance as GameStat;
+                var oGameStatVm = instance as GameStatsVm;
+
+                var mapper = MapperProfile.Configuration.CreateMapper();
+
+                var oGameStat = mapper.Map<GameStat>(oGameStatVm);
                 oGameStat.GameStatId = Guid.NewGuid();
                 oGameStat.PlayerId = oPlayer.PlayerId;
-                oGameStat.MatchTypeId = (int) stat;
+                oGameStat.MatchTypeId = (int)stat;
                 oGameStat.CreatedDate = DateTime.Now;
 
                 using (var r6Model = new R6TrackerEntities())

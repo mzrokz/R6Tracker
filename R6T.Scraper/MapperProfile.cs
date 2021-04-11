@@ -12,15 +12,16 @@ namespace R6T.Model
     {
         public static MapperConfiguration Configuration;
 
-        static MapperProfile()
+        public static void CreateConfiguration()
         {
             Configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Player, PlayerVm>();
-                cfg.CreateMap<GameStat, GameStatsVm>()
-                    .ForMember(f => f.Player, opt => opt.Ignore())
-                    .ForMember(f => f.MatchType, opt => opt.Ignore());
-            });
+             {
+                 cfg.CreateMap<Player, PlayerVm>();
+                 cfg.CreateMap<GameStat, GameStatsVm>()
+                     .ForMember(f => f.Player, opt => opt.Ignore())
+                     .ForMember(f => f.MatchType, opt => opt.Ignore())
+                     .ReverseMap();
+             });
         }
     }
 }

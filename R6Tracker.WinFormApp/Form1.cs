@@ -55,7 +55,7 @@ namespace R6Tracker.WinFormApp
                 {
                     var oMain = new Main();
                     oMain.InitSelenium();
-                    oMain.ScrapeUserData(row);
+                    await oMain.ScrapeUserData(row);
                 }
                 else
                 {
