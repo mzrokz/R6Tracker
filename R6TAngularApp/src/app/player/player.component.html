@@ -1,66 +1,83 @@
-<div>
-  <div class="player" *ngFor="let player of players">
-    <span>{{player.PlayerName}}</span>
-    <button (click)="getPlayerGameStats(player)">Get Data</button>
-    <button (click)="syncPlayerData(player)" tooltip="asdadasd">Sync Player Data</button>
-    <fa-icon *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"></fa-icon>
-    <fa-icon *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
-    <fa-icon *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
+<div class="layout">
+  <div class="section-right">
+    <div class="player-container">
+      <ng-container *ngFor="let player of players">
+        <div class="player" [ngClass]="{'selected' : player.Selected == true}">
+          <div class="card">
+            <div class="sync">
+              <fa-icon class="syncStart" *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"></fa-icon>
+              <fa-icon class="syncSuccess" *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
+              <fa-icon class="syncError" *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
+            </div>
+            <div>{{player.PlayerName}}</div>
+            <div class="action-buttons">
+              <dx-button stylingMode="contained" text="Get Data" type="default" [width]="120"
+                (onClick)="getPlayerGameStats(player)">
+              </dx-button>
+              <dx-button stylingMode="contained" text="Sync Player Data" type="default" [width]="120"
+                (onClick)="syncPlayerData(player)">
+              </dx-button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
-</div>
 
-<div>
-  <!-- (onContentReady)="contentReady($event)" -->
-  <dx-data-grid id="gridContainer" [dataSource]="playerGameStats" [remoteOperations]="false"
-    [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true">
+  <div class="section">
+    <!-- (onContentReady)="contentReady($event)" -->
+    <dx-data-grid id="gridContainer" [dataSource]="playerGameStats" [remoteOperations]="false"
+      [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
+      [height]="'90vh'">
 
-    <dxo-paging [pageSize]="10"></dxo-paging>
-    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
-    <!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
-    <dxo-filter-row [visible]="true"></dxo-filter-row>
-    <dxo-group-panel [visible]="true"></dxo-group-panel>
-    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+      <dxo-paging [pageSize]="20"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100, 500]"></dxo-pager>
+      <!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
 
-    <dxi-column dataField="PlayerLevel"></dxi-column>
-    <dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
-    <dxi-column dataField="MatchTypeName"></dxi-column>
-    <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
-    <dxi-column dataField="MatchesPlayed"></dxi-column>
-    <dxi-column dataField="KD"></dxi-column>
-    <dxi-column dataField="Kills"></dxi-column>
-    <dxi-column dataField="Deaths"></dxi-column>
-    <dxi-column dataField="Wins"></dxi-column>
-    <dxi-column dataField="Losses"></dxi-column>
-    <dxi-column dataField="WinPercent"></dxi-column>
-    <dxi-column dataField="BlindKills"></dxi-column>
-    <dxi-column dataField="HeadshotPercent"></dxi-column>
-    <dxi-column dataField="Headshots"></dxi-column>
-    <dxi-column dataField="KillPerMatch"></dxi-column>
-    <dxi-column dataField="KillPerMin"></dxi-column>
-    <dxi-column dataField="MeleeKills"></dxi-column>
-    <dxi-column dataField="TimePlayed"></dxi-column>
-    <dxi-column dataField="TotalXp"></dxi-column>
-    <dxi-column dataField="LatestRecord"></dxi-column>
+      <dxi-column dataField="PlayerLevel"></dxi-column>
+      <dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
+      <dxi-column dataField="MatchTypeName"></dxi-column>
+      <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
+      <dxi-column dataField="MatchesPlayed"></dxi-column>
+      <dxi-column dataField="KD"></dxi-column>
+      <dxi-column dataField="Kills"></dxi-column>
+      <dxi-column dataField="Deaths"></dxi-column>
+      <dxi-column dataField="Wins"></dxi-column>
+      <dxi-column dataField="Losses"></dxi-column>
+      <dxi-column dataField="WinPercent"></dxi-column>
+      <dxi-column dataField="BlindKills"></dxi-column>
+      <dxi-column dataField="HeadshotPercent"></dxi-column>
+      <dxi-column dataField="Headshots"></dxi-column>
+      <dxi-column dataField="KillPerMatch"></dxi-column>
+      <dxi-column dataField="KillPerMin"></dxi-column>
+      <dxi-column dataField="MeleeKills"></dxi-column>
+      <dxi-column dataField="TimePlayed"></dxi-column>
+      <dxi-column dataField="TotalXp"></dxi-column>
+      <dxi-column dataField="LatestRecord"></dxi-column>
 
 
-    <div *dxTemplate="let d of 'dateCellTemplate'">
-      <span>{{d.value | date: "dd MMM YY"}}</span>
-      <!-- <span>{{d.value}}</span> -->
-    </div>
-
-    <div *dxTemplate="let d of 'matchTypeCellTemplate'">
-      <div *ngIf="d.value==1" class="">
-        General
+      <div *dxTemplate="let d of 'dateCellTemplate'">
+        <span>{{d.value | date: "dd MMM YY"}}</span>
+        <!-- <span>{{d.value}}</span> -->
       </div>
-      <div *ngIf="d.value==2" class="">
-        Ranked
+
+      <div *dxTemplate="let d of 'matchTypeCellTemplate'">
+        <div *ngIf="d.value==1" class="">
+          General
+        </div>
+        <div *ngIf="d.value==2" class="">
+          Ranked
+        </div>
+        <div *ngIf="d.value==3" class="">
+          Unranked
+        </div>
+        <div *ngIf="d.value==4" class="">
+          Casual
+        </div>
       </div>
-      <div *ngIf="d.value==3" class="">
-        Unranked
-      </div>
-      <div *ngIf="d.value==4" class="">
-        Casual
-      </div>
-    </div>
-  </dx-data-grid>
+    </dx-data-grid>
+  </div>
 </div>

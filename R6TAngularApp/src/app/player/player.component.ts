@@ -37,6 +37,10 @@ export class PlayerComponent implements OnInit {
     let playerId = player.PlayerId;
     this.playerService.getPlayerGameStats(playerId).subscribe(res => {
       this.playerGameStats = res || [];
+      this.players.forEach((p: any) => {
+        p.Selected = false;
+      });
+      player.Selected = true;
     })
   }
 

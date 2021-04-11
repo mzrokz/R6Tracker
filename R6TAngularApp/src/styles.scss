@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+.player-container {
+  .dx-button-has-text .dx-button-content {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+  }
+}

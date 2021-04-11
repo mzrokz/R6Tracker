@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
-import { DxDataGridModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule } from 'devextreme-angular';
 import { DxiColumnModule } from 'devextreme-angular/ui/nested';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -19,6 +19,7 @@ import { PlayerComponent } from './player/player.component';
     AppRoutingModule,
     HttpClientModule,
     DxDataGridModule,
+    DxButtonModule,
     DxiColumnModule,
     FontAwesomeModule
   ],
