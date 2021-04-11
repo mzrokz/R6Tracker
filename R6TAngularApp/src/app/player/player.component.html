@@ -1,11 +1,13 @@
-<div>
+<div class="player-container">
   <div class="player" *ngFor="let player of players">
-    <span>{{player.PlayerName}}</span>
-    <button (click)="getPlayerGameStats(player)">Get Data</button>
-    <button (click)="syncPlayerData(player)" tooltip="asdadasd">Sync Player Data</button>
-    <fa-icon *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"></fa-icon>
-    <fa-icon *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
-    <fa-icon *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
+    <div class="card">
+      <span>{{player.PlayerName}}</span>
+      <button (click)="getPlayerGameStats(player)">Get Data</button>
+      <button (click)="syncPlayerData(player)" tooltip="asdadasd">Sync Player Data</button>
+      <fa-icon *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"></fa-icon>
+      <fa-icon *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
+      <fa-icon *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
+    </div>
   </div>
 </div>
 

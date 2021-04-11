@@ -34,7 +34,8 @@ namespace R6T.WebApi.Controllers
                     PlayerId = s.PlayerId,
                     Alias = s.Alias,
                     PlayerName = s.PlayerName,
-                    IsActive = s.IsActive
+                    IsActive = s.IsActive,
+                    Url = s.Url
                 });
                 return Ok(players);
             }

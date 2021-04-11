@@ -1,8 +1,24 @@
-.player {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.player-container {
+  width: 95vw;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-left: 2vw;
+  margin-right: 2vw;
 
-  &:hover {
-    background-color: aquamarine;
+  .player {
+    // display: grid;
+    // grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    display: inline-flex;
+    height: 100px;
+    width: 400px;
+
+    &:hover {
+      background-color: aquamarine;
+    }
+
+    .card {
+
+    }
   }
 }

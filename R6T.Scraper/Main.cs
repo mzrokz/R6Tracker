@@ -67,7 +67,7 @@ namespace R6T.Scraper
             {
                 var arrWaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.DOMContentLoaded };
                 var timeout = 1000 * 60 * 5;
-                await page.GoToAsync($"https://r6.tracker.network/profile/pc/{oPlayer.Alias}", timeout: timeout, arrWaitUntil);
+                await page.GoToAsync(oPlayer.Url, timeout: timeout, arrWaitUntil);
                 string html = await page.GetContentAsync();
 
                 var htmlDoc = new HtmlDocument();
@@ -93,6 +93,7 @@ namespace R6T.Scraper
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return false;
             }
             finally
             {
