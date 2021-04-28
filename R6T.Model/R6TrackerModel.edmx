@@ -29,6 +29,7 @@
           <Property Name="TimePlayed" Type="varchar" MaxLength="20" />
           <Property Name="TotalXp" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="MatchTypes">
           <Key>
@@ -46,6 +47,7 @@
           <Property Name="Alias" Type="nvarchar" MaxLength="100" />
           <Property Name="Url" Type="nvarchar" MaxLength="500" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -186,6 +188,7 @@
           <Property Name="HeadshotPercent" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="KillPerMatch" Type="Decimal" Precision="4" Scale="2" />
           <Property Name="KillPerMin" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="MatchType">
           <Key>
@@ -205,6 +208,7 @@
           <Property Name="IsActive" Type="Boolean" />
           <NavigationProperty Name="GameStats" Relationship="R6TrackerModel.FK_GameStats_Player" FromRole="Player" ToRole="GameStat" />
           <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -263,6 +267,7 @@
           <Property Type="String" Name="TotalXp" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
           <Property Type="Int64" Name="LatestRecord" Nullable="true" />
+          <Property Type="String" Name="RankUrl" Nullable="true" MaxLength="500" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -273,7 +278,8 @@
     <EntitySetMapping Name="GameStats">
       <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.GameStat)">
         <MappingFragment StoreEntitySet="GameStats">
-          <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
+          <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+                <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
                 <ScalarProperty Name="KillPerMatch" ColumnName="KillPerMatch" />
                 <ScalarProperty Name="HeadshotPercent" ColumnName="HeadshotPercent" />
                 <ScalarProperty Name="WinPercent" ColumnName="WinPercent" />
@@ -307,7 +313,8 @@
     <EntitySetMapping Name="Players">
       <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.Player)">
         <MappingFragment StoreEntitySet="Players">
-          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
           <ScalarProperty Name="PlayerName" ColumnName="PlayerName" />
           <ScalarProperty Name="Alias" ColumnName="Alias" />
@@ -351,6 +358,7 @@
                 <ScalarProperty Name="TotalXp" ColumnName="TotalXp" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="LatestRecord" ColumnName="LatestRecord" />
+                <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

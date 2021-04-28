@@ -23,6 +23,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "devextreme"
+            ],
             "outputPath": "dist/R6TAngularApp",
             "index": "src/index.html",
             "main": "src/main.ts",

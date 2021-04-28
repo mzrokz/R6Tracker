@@ -22,4 +22,16 @@ export class PlayerService {
   syncPlayerData(player: any) {
     return this.http.post<any>(environment.apiUrl + 'api/Player/SyncPlayerData', player);
   }
+
+  setActive(player: any) {
+    return this.http.post<any>(environment.apiUrl + 'api/Player/SetActive', player);
+  }
+
+  addPlayer(player: any) {
+    return this.http.post<any>(environment.apiUrl + 'api/Player/AddPlayer', player);
+  }
+
+  getPlayer(player: any) {
+    return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayer?playerId=' + player.PlayerId)
+  }
 }

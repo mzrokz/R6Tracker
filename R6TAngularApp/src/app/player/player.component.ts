@@ -1,6 +1,6 @@
 import { PlayerService } from './../services/player.service';
 import { Component, OnInit } from '@angular/core';
-import { faCheckCircle, faCoffee, faExclamationCircle, faYinYang } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCoffee, faExclamationCircle, faExternalLinkAlt, faPowerOff, faYinYang } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-player',
@@ -15,6 +15,8 @@ export class PlayerComponent implements OnInit {
   syncStart = faYinYang;
   syncSuccess = faCheckCircle;
   syncError = faExclamationCircle;
+  powerOff = faPowerOff;
+  link = faExternalLinkAlt;
 
   currentPlayerGrid: any = null;
 
@@ -26,7 +28,7 @@ export class PlayerComponent implements OnInit {
     this.getPlayers();
   }
 
-  getPlayers() {
+  public getPlayers() {
     this.playerService.getPlayers().subscribe(res => {
       this.players = res || [];
     })
@@ -52,7 +54,11 @@ export class PlayerComponent implements OnInit {
       player.syncStart = false;
       player.syncError = false;
 
-      if (player.PlayerId == this.currentPlayerGrid.PlayerId) {
+      this.playerService.getPlayer(player).subscribe(res => {
+        player.RankUrl = res.RankUrl;
+      });
+
+      if (this.currentPlayerGrid && player.PlayerId == this.currentPlayerGrid.PlayerId) {
         this.getPlayerGameStats(this.currentPlayerGrid);
       }
     }, (err) => {
@@ -61,6 +67,25 @@ export class PlayerComponent implements OnInit {
       player.syncSuccess = false;
       player.syncStart = false;
       player.syncError = true;
+    });
+  }
+
+  setActive(player: any) {
+    this.playerService.setActive(player).subscribe(res => {
+      this.getPlayers();
+    });
+  }
+
+  gotoR6Tracker(player: any) {
+    if (player.Url && player.Url != '') {
+      window.open(player.Url);
+    }
+  }
+
+
+  public syncAllPlayers() {
+    this.players.forEach((player: any) => {
+      this.syncPlayerData(player);
     });
   }
 

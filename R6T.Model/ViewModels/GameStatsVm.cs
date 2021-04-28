@@ -99,6 +99,14 @@
             "//div[@data-stat='CasualKillsPerMinute']")]
         public new decimal? KillPerMin { get; set; }
 
+        [AttachXPath(
+            "",
+            "//img[@class='r6-season-rank__image']",
+            "",
+            "(//img[@class='r6-season-rank__image'])[3]")]
+        [ElementValue("src")]
+        public string RankUrl { get; set; }
+
         public MatchType MatchType { get; set; }
         public Player Player { get; set; }
     }

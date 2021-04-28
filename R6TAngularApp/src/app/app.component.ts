@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Output, ViewChild } from '@angular/core';
+import { PlayerComponent } from './player/player.component';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,19 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'R6TAngularApp';
+
+  @ViewChild(PlayerComponent)
+  playerView!: PlayerComponent;
+
+  constructor() {
+
+  }
+
+  onPlayerAdd() {
+    this.playerView.getPlayers();
+  }
+
+  syncAllPlayers() {
+    this.playerView.syncAllPlayers();
+  }
 }

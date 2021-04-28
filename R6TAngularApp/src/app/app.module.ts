@@ -3,24 +3,36 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
-import { DxButtonModule, DxDataGridModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxPopupModule } from 'devextreme-angular';
 import { DxiColumnModule } from 'devextreme-angular/ui/nested';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { PlayerComponent } from './player/player.component';
+import { AddPlayerComponent } from './player/add-player/add-player.component';
+import { FormsModule } from '@angular/forms';
+
+
+const DxiModules = [
+  // DX -------------------
+  DxDataGridModule,
+  DxButtonModule,
+  DxPopupModule,
+  // DXI -------------------
+  DxiColumnModule
+]
 @NgModule({
   declarations: [
     AppComponent,
-    PlayerComponent
+    PlayerComponent,
+    AddPlayerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    DxDataGridModule,
-    DxButtonModule,
-    DxiColumnModule,
+    FormsModule,
+    ...DxiModules,
     FontAwesomeModule
   ],
   providers: [],

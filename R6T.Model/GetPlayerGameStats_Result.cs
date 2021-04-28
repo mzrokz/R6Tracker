@@ -35,5 +35,6 @@ namespace R6T.Model
         public string TotalXp { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<long> LatestRecord { get; set; }
+        public string RankUrl { get; set; }
     }
 }

@@ -55,6 +55,15 @@
         .card {
           width: 300px;
 
+          .body {
+            display: grid;
+            grid-template-columns: 50px 250px;
+
+            .imgRank {
+              width: 50px;
+            }
+          }
+
           .action-buttons {
             dx-button {
               margin-right: 5px;
@@ -66,8 +75,50 @@
       .selected {
         background-color: #d5ecff;
       }
+
+      .toolbarIcons {
+        fa-icon {
+          font-size: 12px;
+          margin-right: 3px;
+        }
+
+        .isActive {
+          cursor: pointer;
+
+          &.active {
+            color: rgb(0, 106, 0);
+          }
+
+          &.inActive {
+            color: rgb(181, 0, 0);
+          }
+        }
+
+        .link {
+          cursor: pointer;
+          color: #c76500;
+        }
+
+        img {
+          width: 19px;
+          vertical-align: bottom;
+        }
+      }
     }
+
   }
 
-  .section {}
+  .section {
+    #gridContainer {
+
+      .imgRank {
+        text-align: center;
+
+        img {
+          width: 20px;
+        }
+      }
+
+    }
+  }
 }

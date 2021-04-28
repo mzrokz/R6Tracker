@@ -11,7 +11,7 @@ namespace R6T.Model
 {
     using System;
     using System.Collections.Generic;
-
+    
     public partial class GameStat
     {
         public System.Guid GameStatId { get; set; }
@@ -34,7 +34,8 @@ namespace R6T.Model
         public string HeadshotPercent { get; set; }
         public Nullable<decimal> KillPerMatch { get; set; }
         public Nullable<decimal> KillPerMin { get; set; }
-
+        public string RankUrl { get; set; }
+    
         public virtual MatchType MatchType { get; set; }
         public virtual Player Player { get; set; }
     }

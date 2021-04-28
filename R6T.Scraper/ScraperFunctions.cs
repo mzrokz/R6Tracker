@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
@@ -39,6 +40,22 @@ namespace R6T.Scraper
                 return false;
             }
             return true;
+        }
+
+        public void CheckDataType(Type type, PropertyInfo prop, object instance, string data)
+        {
+            if (typeof(int?).IsAssignableFrom(prop.PropertyType))
+            {
+                prop.SetValue(instance, data.ToInt32(), null);
+            }
+            else if (typeof(decimal?).IsAssignableFrom(prop.PropertyType))
+            {
+                prop.SetValue(instance, data.ToDecimal(), null);
+            }
+            else
+            {
+                prop.SetValue(instance, data, null);
+            }
         }
 
         public void Dispose()

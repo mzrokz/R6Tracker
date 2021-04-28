@@ -13,9 +13,4 @@ namespace R6T.Model.ViewModels
         Unranked = 3,
         Casual = 4
     }
-
-    public class MasterEnums
-    {
-
-    }
 }

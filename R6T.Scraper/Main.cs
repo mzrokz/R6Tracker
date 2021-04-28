@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -16,10 +17,11 @@ namespace R6T.Scraper
     public class Main
     {
         private IWebDriver browser;
-
+        private ScraperFunctions _scraperFunction;
         public Main()
         {
             MapperProfile.CreateConfiguration();
+            _scraperFunction = new ScraperFunctions();
         }
 
         public async Task<RevisionInfo> FetchChromium(BrowserFetcherOptions options = null)
@@ -74,9 +76,7 @@ namespace R6T.Scraper
             }
         }
 
-
-
-        public async Task<bool> ScrapeUserData(Player oPlayer)
+        public async Task<bool> ScrapeUserData(Player oPlayer, string pathAppData = "")
         {
             // Create a new page and go to Bing Maps
             // Page page = await browser.NewPageAsync();
@@ -88,10 +88,7 @@ namespace R6T.Scraper
                 }
 
                 browser.Url = oPlayer.Url;
-                using (var oScraperFunction = new ScraperFunctions())
-                {
-                    //oScraperFunction.MonkeyPatchInterval(browser);
-                }
+                //oScraperFunction.MonkeyPatchInterval(browser);
 
                 string html = browser.PageSource;
                 var htmlDoc = new HtmlDocument();
@@ -100,6 +97,7 @@ namespace R6T.Scraper
 
                 if (DoesPlayerExists(htmlDoc))
                 {
+                    ExtractRank(htmlDoc, oPlayer, pathAppData);
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
                         ExtractStats(htmlDoc, oPlayer, typeof(GameStatsVm));
@@ -142,7 +140,7 @@ namespace R6T.Scraper
             {
                 var oGameStat = r6Model.GameStats.Where(w => w.PlayerId == oPlayer.PlayerId && w.MatchTypeId == 1)
                     .OrderByDescending(o => o.CreatedDate).FirstOrDefault();
-                if (oGameStat.MatchesPlayed < oGeneralGameStat.MatchesPlayed)
+                if (oGameStat == null || oGameStat.MatchesPlayed < oGeneralGameStat.MatchesPlayed)
                 {
                     return true;
                 }
@@ -151,21 +149,6 @@ namespace R6T.Scraper
             return false;
         }
 
-        public void CheckDataType(Type type, PropertyInfo prop, object instance, string data)
-        {
-            if (typeof(int?).IsAssignableFrom(prop.PropertyType))
-            {
-                prop.SetValue(instance, data.ToInt32(), null);
-            }
-            else if (typeof(decimal?).IsAssignableFrom(prop.PropertyType))
-            {
-                prop.SetValue(instance, data.ToDecimal(), null);
-            }
-            else
-            {
-                prop.SetValue(instance, data, null);
-            }
-        }
 
         public void ExtractStats(HtmlDocument htmlDoc, Player oPlayer, Type type)
         {
@@ -185,8 +168,23 @@ namespace R6T.Scraper
                         var xpath = propertyDbi.XPath.ElementAtOrDefault(i);
                         if (!string.IsNullOrEmpty(xpath))
                         {
-                            var data = htmlDoc.DocumentNode.SelectSingleNode(xpath).InnerHtml;
-                            CheckDataType(type, property, instance, data);
+                            if (attr.Length == 2)
+                            {
+                                var eValue = (attr[1] as ElementValue)?.Value;
+                                if (eValue != null)
+                                {
+                                    if (eValue == "src")
+                                    {
+                                        var data = htmlDoc.DocumentNode.SelectSingleNode(xpath).Attributes["src"].Value;
+                                        _scraperFunction.CheckDataType(type, property, instance, data);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var data = htmlDoc.DocumentNode.SelectSingleNode(xpath).InnerHtml;
+                                _scraperFunction.CheckDataType(type, property, instance, data);
+                            }
                         }
                     }
                 }
@@ -207,6 +205,89 @@ namespace R6T.Scraper
                     r6Model.SaveChanges();
                 }
             }
+        }
+
+        public bool ExtractRank(HtmlDocument htmlDoc, Player oPlayer, string pathAppData)
+        {
+            try
+            {
+                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//img[@class='r6-season-rank__image']");
+                if (imgNode != null && imgNode.Attributes.Contains("src"))
+                {
+                    var imgRankUrl = imgNode.Attributes["src"].Value;
+
+                    if (!String.IsNullOrEmpty(imgRankUrl))
+                    {
+
+                        //https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank16.svg
+                        if (!imgRankUrl.Contains("trackercdn.com") && !imgRankUrl.Contains("r6.tracker.network"))
+                        {
+                            imgRankUrl = "http://r6.tracker.network" + imgRankUrl;
+                        }
+                        //using (WebClient client = new WebClient())
+                        //{
+                        //    client.DownloadFile(new Uri(imgRankUrl), $"{pathAppData}playerRanks\\{oPlayer.PlayerId}.svg");
+                        //}
+                        using (var r6Model = new R6TrackerEntities())
+                        {
+                            var player = r6Model.Players.SingleOrDefault(s => s.PlayerId == oPlayer.PlayerId);
+                            if (player != null)
+                            {
+                                player.RankUrl = imgRankUrl;
+                                r6Model.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        public Player GetPlayer(string alias)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(alias))
+                {
+                    return null;
+                }
+
+                browser.Url = $"https://r6.tracker.network/profile/pc/{alias}";
+                //oScraperFunction.MonkeyPatchInterval(browser);
+
+                string html = browser.PageSource;
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(html);
+
+                if (DoesPlayerExists(htmlDoc))
+                {
+                    Player oPlayer = new Player();
+                    var url = htmlDoc.DocumentNode
+                        .SelectSingleNode("//input[@id='perm-link']").Attributes["value"].Value;
+                    oPlayer.Url = url;
+                    return oPlayer;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                browser.Quit();
+            }
+
+            return null;
         }
     }
 }

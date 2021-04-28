@@ -1,0 +1,22 @@
+<button (click)="popupVisible=true;">Add Player</button>
+<dx-popup [width]="300" [height]="250" [showTitle]="true" title="Add Player" [dragEnabled]="false"
+  [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'">
+    <p>
+      Player Name
+      <span>
+        <input [(ngModel)]="player.PlayerName" />
+      </span>
+    </p>
+    <p>
+      Alias
+      <span>
+        <input [(ngModel)]="player.Alias" />
+      </span>
+    </p>
+    <div>
+      <dx-button stylingMode="contained" text="Add Player" type="default" [width]="120" (onClick)="addPlayer()">
+      </dx-button>
+    </div>
+  </div>
+</dx-popup>
