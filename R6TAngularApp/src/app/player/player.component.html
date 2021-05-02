@@ -51,33 +51,15 @@
       <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
 
       <dxi-column dataField="PlayerLevel"></dxi-column>
+      <!-- ----------------------------------------------------------------------------------------------------- CreatedDate -->
       <dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
-      <dxi-column dataField="MatchTypeName"></dxi-column>
-      <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
-      <dxi-column dataField="MatchesPlayed"></dxi-column>
-      <dxi-column dataField="KD"></dxi-column>
-      <dxi-column dataField="RankUrl" cellTemplate="imgRankCellTemplate"></dxi-column>
-      <dxi-column dataField="Kills"></dxi-column>
-      <dxi-column dataField="Deaths"></dxi-column>
-      <dxi-column dataField="Wins"></dxi-column>
-      <dxi-column dataField="Losses"></dxi-column>
-      <dxi-column dataField="WinPercent"></dxi-column>
-      <dxi-column dataField="BlindKills"></dxi-column>
-      <dxi-column dataField="HeadshotPercent"></dxi-column>
-      <dxi-column dataField="Headshots"></dxi-column>
-      <dxi-column dataField="KillPerMatch"></dxi-column>
-      <dxi-column dataField="KillPerMin"></dxi-column>
-      <dxi-column dataField="MeleeKills"></dxi-column>
-      <dxi-column dataField="TimePlayed"></dxi-column>
-      <dxi-column dataField="TotalXp"></dxi-column>
-      <dxi-column dataField="LatestRecord"></dxi-column>
-
-
       <div *dxTemplate="let d of 'dateCellTemplate'">
         <span>{{d.value | date: "dd MMM YY"}}</span>
         <!-- <span>{{d.value}}</span> -->
       </div>
-
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- MatchTypeName -->
+      <dxi-column dataField="MatchTypeName"></dxi-column>
       <div *dxTemplate="let d of 'matchTypeCellTemplate'">
         <div *ngIf="d.value==1" class="">
           General
@@ -92,12 +74,104 @@
           Casual
         </div>
       </div>
+      <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- MatchesPlayed -->
+      <dxi-column dataField="MatchesPlayed" cellTemplate="matchesPlayedCellTemplate"></dxi-column>
+      <div *dxTemplate="let d of 'matchesPlayedCellTemplate'">
+        <span id="matchesPlayed-{{d.rowIndex}}" (mouseenter)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed"
+          (mouseleave)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed">{{d.value}}</span>
 
-      <div class="imgRank" *dxTemplate="let d of 'imgRankCellTemplate'">
-        <ng-container *ngIf="d.value">
-          <img [src]="d.value">
-        </ng-container>
+        <dx-tooltip target="#matchesPlayed-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipMatchesPlayed"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <span>{{d.data.Difference.MatchesPlayed}}</span>
+          </div>
+        </dx-tooltip>
       </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <dxi-column dataField="KD"></dxi-column>
+      <!-- ----------------------------------------------------------------------------------------------------- RankUrl -->
+      <dxi-column dataField="RankUrl" cellTemplate="imgRankCellTemplate"></dxi-column>
+      <div id="imgRank-{{d.rowIndex}}" class="imgRank" *dxTemplate="let d of 'imgRankCellTemplate'">
+        <ng-container *ngIf="d.value">
+          <img [src]="d.value" (mouseenter)="showImgRankTooltip(d)" (mouseleave)="showImgRankTooltip(d)">
+        </ng-container>
+
+        <dx-tooltip target="#imgRank-{{d.rowIndex}}" position="right" [(visible)]="d.showToolTip"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <img width='50' [src]="d.value">
+          </div>
+        </dx-tooltip>
+      </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- Kills -->
+      <dxi-column dataField="Kills" cellTemplate="killsCellTemplate"></dxi-column>
+      <div *dxTemplate="let d of 'killsCellTemplate'">
+        <span id="kills-{{d.rowIndex}}" (mouseenter)="d.showTooltipKills = !d.showTooltipKills"
+          (mouseleave)="d.showTooltipKills = !d.showTooltipKills">{{d.value}}</span>
+
+        <dx-tooltip target="#kills-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipKills"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <span>{{d.data.Difference.Kills}}</span>
+          </div>
+        </dx-tooltip>
+      </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- Deaths -->
+      <dxi-column dataField="Deaths" cellTemplate="deathCellTemplate"></dxi-column>
+      <div *dxTemplate="let d of 'deathCellTemplate'">
+        <span id="deaths-{{d.rowIndex}}" (mouseenter)="d.showTooltipDeaths = !d.showTooltipDeaths"
+          (mouseleave)="d.showTooltipDeaths = !d.showTooltipDeaths">{{d.value}}</span>
+
+        <dx-tooltip target="#deaths-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipDeaths"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <span>{{d.data.Difference.Deaths}}</span>
+          </div>
+        </dx-tooltip>
+      </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- Wins -->
+      <dxi-column dataField="Wins" cellTemplate="winCellTemplate"></dxi-column>
+      <div *dxTemplate="let d of 'winCellTemplate'">
+        <span id="wins-{{d.rowIndex}}" (mouseenter)="d.showTooltipWins = !d.showTooltipWins"
+          (mouseleave)="d.showTooltipWins = !d.showTooltipWins">{{d.value}}</span>
+
+        <dx-tooltip target="#wins-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipWins"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <span>{{d.data.Difference.Wins}}</span>
+          </div>
+        </dx-tooltip>
+      </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <!-- ----------------------------------------------------------------------------------------------------- Losses -->
+      <dxi-column dataField="Losses" cellTemplate="lossCellTemplate"></dxi-column>
+      <div *dxTemplate="let d of 'lossCellTemplate'">
+        <span id="loss-{{d.rowIndex}}" (mouseenter)="d.showTooltipLosses = !d.showTooltipLosses"
+          (mouseleave)="d.showTooltipLosses = !d.showTooltipLosses">{{d.value}}</span>
+
+        <dx-tooltip target="#loss-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipLosses"
+          [closeOnOutsideClick]="false">
+          <div *dxTemplate="let data = data of 'content'">
+            <span>{{d.data.Difference.Losses}}</span>
+          </div>
+        </dx-tooltip>
+      </div>
+      <!-- ----------------------------------------------------------------------------------------------------- -->
+      <dxi-column dataField="WinPercent"></dxi-column>
+      <dxi-column dataField="BlindKills"></dxi-column>
+      <dxi-column dataField="HeadshotPercent"></dxi-column>
+      <dxi-column dataField="Headshots"></dxi-column>
+      <dxi-column dataField="KillPerMatch"></dxi-column>
+      <dxi-column dataField="KillPerMin"></dxi-column>
+      <dxi-column dataField="MeleeKills"></dxi-column>
+      <dxi-column dataField="TimePlayed"></dxi-column>
+      <dxi-column dataField="TotalXp"></dxi-column>
+      <dxi-column dataField="LatestRecord"></dxi-column>
     </dx-data-grid>
   </div>
 </div>

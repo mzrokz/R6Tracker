@@ -175,8 +175,12 @@ namespace R6T.Scraper
                                 {
                                     if (eValue == "src")
                                     {
-                                        var data = htmlDoc.DocumentNode.SelectSingleNode(xpath).Attributes["src"].Value;
-                                        _scraperFunction.CheckDataType(type, property, instance, data);
+                                        var srcNode = htmlDoc.DocumentNode.SelectSingleNode(xpath);
+                                        if (srcNode != null)
+                                        {
+                                            var data = srcNode.Attributes["src"].Value;
+                                            _scraperFunction.CheckDataType(type, property, instance, data);
+                                        }
                                     }
                                 }
                             }
@@ -209,16 +213,16 @@ namespace R6T.Scraper
 
         public bool ExtractRank(HtmlDocument htmlDoc, Player oPlayer, string pathAppData)
         {
+            var imgRankUrl = "https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank0.svg";
             try
             {
-                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//img[@class='r6-season-rank__image']");
+                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='profile']/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/img[1]");
                 if (imgNode != null && imgNode.Attributes.Contains("src"))
                 {
-                    var imgRankUrl = imgNode.Attributes["src"].Value;
+                    imgRankUrl = imgNode.Attributes["src"].Value;
 
                     if (!String.IsNullOrEmpty(imgRankUrl))
                     {
-
                         //https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank16.svg
                         if (!imgRankUrl.Contains("trackercdn.com") && !imgRankUrl.Contains("r6.tracker.network"))
                         {
@@ -228,15 +232,16 @@ namespace R6T.Scraper
                         //{
                         //    client.DownloadFile(new Uri(imgRankUrl), $"{pathAppData}playerRanks\\{oPlayer.PlayerId}.svg");
                         //}
-                        using (var r6Model = new R6TrackerEntities())
-                        {
-                            var player = r6Model.Players.SingleOrDefault(s => s.PlayerId == oPlayer.PlayerId);
-                            if (player != null)
-                            {
-                                player.RankUrl = imgRankUrl;
-                                r6Model.SaveChanges();
-                            }
-                        }
+                    }
+                }
+
+                using (var r6Model = new R6TrackerEntities())
+                {
+                    var player = r6Model.Players.SingleOrDefault(s => s.PlayerId == oPlayer.PlayerId);
+                    if (player != null)
+                    {
+                        player.RankUrl = imgRankUrl;
+                        r6Model.SaveChanges();
                     }
                 }
             }

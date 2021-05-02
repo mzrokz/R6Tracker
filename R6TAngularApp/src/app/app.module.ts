@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
-import { DxButtonModule, DxDataGridModule, DxPopupModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxPopupModule, DxTooltipModule } from 'devextreme-angular';
 import { DxiColumnModule } from 'devextreme-angular/ui/nested';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -18,6 +18,7 @@ const DxiModules = [
   DxDataGridModule,
   DxButtonModule,
   DxPopupModule,
+  DxTooltipModule,
   // DXI -------------------
   DxiColumnModule
 ]

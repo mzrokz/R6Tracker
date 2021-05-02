@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Results;
+using System.Web.UI.WebControls;
 using PuppeteerSharp;
 using R6T.Scraper;
 
@@ -52,11 +53,31 @@ namespace R6T.WebApi.Controllers
             {
                 //var gameStats = oEntity.GameStats.Where(w => w.PlayerId == playerId).ToList();
 
-                var gameStats = oEntity.GetPlayerGameStats(playerId);
+                var gameStats = oEntity.GetPlayerGameStats(playerId).ToList();
 
-                //var lstGameStatsVm = Mapper.Map<List<GameStatsVm>>(gameStats);
+                var mapper = MapperProfile.Configuration.CreateMapper();
+                var lstGameStatsVm = mapper.Map<List<GameStatsVm>>(gameStats);
 
-                return Ok(gameStats);
+                for (int i = 1; i <= lstGameStatsVm.Count; i++)
+                {
+                    var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
+                    foreach (var record in records)
+                    {
+                        var nextRecord = lstGameStatsVm.SingleOrDefault(s =>
+                            s.LatestRecord == (record.LatestRecord + 1) && s.MatchTypeId == record.MatchTypeId);
+                        if (nextRecord != null)
+                        {
+                            record.Difference = new GameStatsVm();
+                            record.Difference.MatchesPlayed = record.MatchesPlayed - nextRecord.MatchesPlayed;
+                            record.Difference.Kills = record.Kills - nextRecord.Kills;
+                            record.Difference.Deaths = record.Deaths - nextRecord.Deaths;
+                            record.Difference.Wins = record.Wins - nextRecord.Wins;
+                            record.Difference.Losses = record.Losses - nextRecord.Losses;
+                        }
+                    }
+                }
+
+                return Ok(lstGameStatsVm);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace R6T.Model.ViewModels
+﻿using System;
+
+namespace R6T.Model.ViewModels
 {
     [AttachXPath(
         EMatchType.General,
@@ -7,6 +9,11 @@
         EMatchType.Casual)]
     public class GameStatsVm
     {
+
+        public GameStatsVm()
+        {
+        }
+
         [AttachXPath(
             "//div[@class='trn-defstat__value']",
             "//div[@class='trn-defstat__value']",
@@ -101,13 +108,19 @@
 
         [AttachXPath(
             "",
-            "//img[@class='r6-season-rank__image']",
+            "//*[@id=\"profile\"]/div[3]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[2]/img[1]",
             "",
-            "(//img[@class='r6-season-rank__image'])[3]")]
+            "//*[@id=\"profile\"]/div[3]/div[1]/div[4]/div[2]/div[2]/div[1]/div[3]/div[2]/img[1]")]
         [ElementValue("src")]
         public string RankUrl { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public long LatestRecord { get; set; }
+        public Nullable<int> MatchTypeId { get; set; }
+        public string MatchTypeName { get; set; }
 
+        public GameStatsVm Difference { get; set; }
         public MatchType MatchType { get; set; }
         public Player Player { get; set; }
+
     }
 }
