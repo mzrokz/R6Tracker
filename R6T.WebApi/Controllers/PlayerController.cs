@@ -47,7 +47,7 @@ namespace R6T.WebApi.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetGameStats(Guid playerId)
+        public async Task<IHttpActionResult> GetGameStats(Guid playerId)
         {
             using (var oEntity = new R6TrackerEntities())
             {
@@ -58,7 +58,8 @@ namespace R6T.WebApi.Controllers
                 var mapper = MapperProfile.Configuration.CreateMapper();
                 var lstGameStatsVm = mapper.Map<List<GameStatsVm>>(gameStats);
 
-                for (int i = 1; i <= lstGameStatsVm.Count; i++)
+                var maxLatestRecord = lstGameStatsVm.Max(m => m.LatestRecord);
+                for (int i = 1; i <= maxLatestRecord; i++)
                 {
                     var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
                     foreach (var record in records)

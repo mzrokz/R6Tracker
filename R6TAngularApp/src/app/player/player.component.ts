@@ -90,7 +90,7 @@ export class PlayerComponent implements OnInit {
   }
 
   showImgRankTooltip(d: any) {
-    console.log("showImgRankTooltip", d);
+    // console.log("showImgRankTooltip", d);
     d.showToolTip = !d.showToolTip;
   }
 
