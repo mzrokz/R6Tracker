@@ -3,6 +3,7 @@ using R6T.Model;
 using R6T.Model.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -32,16 +33,22 @@ namespace R6T.WebApi.Controllers
         {
             using (var oEntity = new R6TrackerEntities())
             {
-                var players = oEntity.Players.OrderByDescending(o => o.IsActive).ThenBy(o => o.PlayerName).ToList().Select(s =>
-                    new PlayerVm()
-                    {
-                        PlayerId = s.PlayerId,
-                        Alias = s.Alias,
-                        PlayerName = s.PlayerName,
-                        IsActive = s.IsActive,
-                        Url = s.Url,
-                        RankUrl = s.RankUrl
-                    });
+                var players =
+                    oEntity.Players
+                        .OrderByDescending(o => o.IsActive)
+                        .ThenBy(o => o.SortOrder)
+                        .ThenBy(o => o.PlayerName)
+                    .Select(s =>
+                      new PlayerVm()
+                      {
+                          PlayerId = s.PlayerId,
+                          Alias = s.Alias,
+                          PlayerName = s.PlayerName,
+                          IsActive = s.IsActive,
+                          Url = s.Url,
+                          RankUrl = s.RankUrl,
+                          SortOrder = s.SortOrder
+                      }).ToList();
                 return Ok(players);
             }
         }
@@ -203,6 +210,58 @@ namespace R6T.WebApi.Controllers
                 }
                 return Ok(oPlayer);
             }
+        }
+
+        [HttpPost, Route("api/Player/SetSort")]
+        public IHttpActionResult SetSort(PlayerVm oPlayer)
+        {
+            if (oPlayer != null)
+            {
+                try
+                {
+                    var oEntity = new R6TrackerEntities();
+                    if (oPlayer.SortType == "up")
+                    {
+                        if (oPlayer.SortOrder > 1)
+                        {
+                            var players = oEntity.Players.Where(w => w.SortOrder == oPlayer.SortOrder - 1);
+                            foreach (var player in players)
+                            {
+                                player.SortOrder = player.SortOrder + 1;
+                            }
+
+                            oPlayer.SortOrder -= 1;
+                            oEntity.Players.AddOrUpdate(oPlayer);
+                            oEntity.SaveChanges();
+                        }
+                    }
+                    else if (oPlayer.SortType == "down")
+                    {
+                        var maxSortOrder = oEntity.Players.Max(m => m.SortOrder);
+                        if (maxSortOrder.HasValue && oPlayer.SortOrder < maxSortOrder.Value)
+                        {
+                            var players = oEntity.Players.Where(w => w.SortOrder == oPlayer.SortOrder + 1);
+                            foreach (var player in players)
+                            {
+                                if (player.SortOrder > 1)
+                                {
+                                    player.SortOrder = player.SortOrder - 1;
+                                }
+                            }
+
+                            oPlayer.SortOrder += 1;
+                            oEntity.Players.AddOrUpdate(oPlayer);
+                            oEntity.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return BadRequest(ex.Message);
+                }
+            }
+            return Ok();
         }
     }
 }

@@ -13,6 +13,8 @@
                   <fa-icon class="isActive" [ngClass]="{'active':player.IsActive,'inActive':!player.IsActive}"
                     [icon]="powerOff" (click)="setActive(player)"></fa-icon>
                   <fa-icon class="link" [icon]="link" (click)="gotoR6Tracker(player)"></fa-icon>
+                  <fa-icon class="sortButton" [icon]="sortUp" (click)="setSort(player, 'up')"></fa-icon>
+                  <fa-icon class="sortButton" [icon]="sortDown" (click)="setSort(player, 'down')"></fa-icon>
                   <fa-icon class="syncStart" *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true">
                   </fa-icon>
                   <fa-icon class="syncSuccess" *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>

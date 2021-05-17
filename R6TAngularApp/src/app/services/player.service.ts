@@ -34,4 +34,8 @@ export class PlayerService {
   getPlayer(player: any) {
     return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayer?playerId=' + player.PlayerId)
   }
+
+  setSort(player: any) {
+    return this.http.post<any>(environment.apiUrl + 'api/Player/SetSort', player);
+  }
 }

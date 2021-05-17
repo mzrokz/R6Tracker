@@ -1,6 +1,6 @@
 import { PlayerService } from './../services/player.service';
 import { Component, OnInit } from '@angular/core';
-import { faCheckCircle, faCoffee, faExclamationCircle, faExternalLinkAlt, faPowerOff, faYinYang } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faCheckCircle, faCoffee, faExclamationCircle, faExternalLinkAlt, faPowerOff, faYinYang } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-player',
@@ -17,6 +17,8 @@ export class PlayerComponent implements OnInit {
   syncError = faExclamationCircle;
   powerOff = faPowerOff;
   link = faExternalLinkAlt;
+  sortUp = faArrowUp;
+  sortDown = faArrowDown;
 
   currentPlayerGrid: any = null;
 
@@ -94,4 +96,10 @@ export class PlayerComponent implements OnInit {
     d.showToolTip = !d.showToolTip;
   }
 
+  setSort(player: any, type: string) {
+    player.SortType = type;
+    this.playerService.setSort(player).subscribe(res => {
+      this.getPlayers();
+    });
+  }
 }

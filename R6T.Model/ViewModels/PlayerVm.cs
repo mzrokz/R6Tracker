@@ -8,5 +8,6 @@ namespace R6T.Model.ViewModels
 {
     public class PlayerVm : Player
     {
+        public string SortType { get; set; }
     }
 }

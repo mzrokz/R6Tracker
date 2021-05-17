@@ -48,6 +48,7 @@
           <Property Name="Url" Type="nvarchar" MaxLength="500" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="SortOrder" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -209,6 +210,7 @@
           <NavigationProperty Name="GameStats" Relationship="R6TrackerModel.FK_GameStats_Player" FromRole="Player" ToRole="GameStat" />
           <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SortOrder" Type="Int32" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -313,7 +315,8 @@
     <EntitySetMapping Name="Players">
       <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.Player)">
         <MappingFragment StoreEntitySet="Players">
-          <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+          <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
           <ScalarProperty Name="PlayerName" ColumnName="PlayerName" />

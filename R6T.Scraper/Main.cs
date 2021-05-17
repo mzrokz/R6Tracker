@@ -100,7 +100,7 @@ namespace R6T.Scraper
                     ExtractRank(htmlDoc, oPlayer, pathAppData);
                     if (DoesNewDataExists(oPlayer, htmlDoc))
                     {
-                        ExtractStats(htmlDoc, oPlayer, typeof(GameStatsVm));
+                        await Task.Run(() => { ExtractStats(htmlDoc, oPlayer, typeof(GameStatsVm)); });
                     }
                 }
                 else
