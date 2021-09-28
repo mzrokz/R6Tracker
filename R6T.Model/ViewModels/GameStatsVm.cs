@@ -15,10 +15,10 @@ namespace R6T.Model.ViewModels
         }
 
         [AttachXPath(
-            "//div[@class='trn-defstat__value']",
-            "//div[@class='trn-defstat__value']",
-            "//div[@class='trn-defstat__value']",
-            "//div[@class='trn-defstat__value']")]
+            "(//div[@class='trn-defstat__value-stylized'])[2]",
+            "(//div[@class='trn-defstat__value-stylized'])[2]",
+            "(//div[@class='trn-defstat__value-stylized'])[2]",
+            "(//div[@class='trn-defstat__value-stylized'])[2]")]
         public new int? PlayerLevel { get; set; }
 
         [AttachXPath(
@@ -108,9 +108,9 @@ namespace R6T.Model.ViewModels
 
         [AttachXPath(
             "",
-            "//*[@id=\"profile\"]/div[3]/div[1]/div[4]/div[2]/div[1]/div[1]/div[3]/div[2]/img[1]",
+            "//div[contains(@class,'trn-card__content trn-card--light')]//img",
             "",
-            "//*[@id=\"profile\"]/div[3]/div[1]/div[4]/div[2]/div[2]/div[1]/div[3]/div[2]/img[1]")]
+            "//*[@id='profile']//div[3]//div[1]//div[4]//div[2]//div[2]//div[1]//svg//g//image")]
         [ElementValue("src")]
         public string RankUrl { get; set; }
         public DateTime? CreatedDate { get; set; }

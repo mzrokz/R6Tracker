@@ -58,6 +58,7 @@ export class PlayerComponent implements OnInit {
 
       this.playerService.getPlayer(player).subscribe(res => {
         player.RankUrl = res.RankUrl;
+        player.LatestAlias = res.LatestAlias;
       });
 
       if (this.currentPlayerGrid && player.PlayerId == this.currentPlayerGrid.PlayerId) {

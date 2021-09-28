@@ -27,6 +27,7 @@ namespace R6T.Model
         public string Url { get; set; }
         public string RankUrl { get; set; }
         public Nullable<int> SortOrder { get; set; }
+        public string LatestAlias { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GameStat> GameStats { get; set; }

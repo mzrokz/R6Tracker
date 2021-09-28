@@ -4,7 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_PublishTargetUrl>H:\Work\R6Tracker\Publish\Backend</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\Work\R6Tracker\Publish\Backend</_PublishTargetUrl>
+    <History>False|2021-09-28T13:55:31.8017647Z;True|2021-09-28T19:20:51.5474834+05:30;True|2021-09-28T19:13:50.9352034+05:30;False|2021-09-28T19:12:57.3031686+05:30;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Data/chromedriver.exe">
@@ -85,6 +86,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="bin/AutoMapper.dll">
       <publishTime>10/16/2020 15:36:54</publishTime>
     </File>
+    <File Include="bin/chrome-driver/chromedriver.exe">
+      <publishTime>09/23/2021 00:45:36</publishTime>
+    </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>11/09/2013 09:10:04</publishTime>
     </File>
@@ -98,7 +102,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/30/2020 18:57:26</publishTime>
     </File>
     <File Include="bin/log4net.config">
-      <publishTime>07/11/2020 15:11:53</publishTime>
+      <publishTime>11/07/2020 15:11:53</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNetCore.WebUtilities.dll">
       <publishTime>02/20/2018 20:41:26</publishTime>
@@ -137,25 +141,25 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/16/2020 00:09:02</publishTime>
     </File>
     <File Include="bin/R6T.Model.dll">
-      <publishTime>05/02/2021 06:07:58</publishTime>
+      <publishTime>09/28/2021 19:12:19</publishTime>
     </File>
     <File Include="bin/R6T.Model.dll.config">
-      <publishTime>01/27/2021 03:13:26</publishTime>
+      <publishTime>09/28/2021 17:18:04</publishTime>
     </File>
     <File Include="bin/R6T.Model.pdb">
-      <publishTime>05/02/2021 06:07:58</publishTime>
+      <publishTime>09/28/2021 19:12:19</publishTime>
     </File>
     <File Include="bin/R6T.Scraper.dll">
-      <publishTime>05/02/2021 06:07:58</publishTime>
+      <publishTime>09/28/2021 19:12:45</publishTime>
     </File>
     <File Include="bin/R6T.Scraper.pdb">
-      <publishTime>05/02/2021 06:07:58</publishTime>
+      <publishTime>09/28/2021 19:12:45</publishTime>
     </File>
     <File Include="bin/R6T.WebApi.dll">
-      <publishTime>05/02/2021 06:07:59</publishTime>
+      <publishTime>09/28/2021 19:25:30</publishTime>
     </File>
     <File Include="bin/R6T.WebApi.pdb">
-      <publishTime>05/02/2021 06:07:59</publishTime>
+      <publishTime>09/28/2021 19:25:30</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>08/08/2018 05:38:48</publishTime>
@@ -304,6 +308,18 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="bin/roslyn/VBCSCompiler.exe.config">
       <publishTime>08/08/2018 12:18:16</publishTime>
     </File>
+    <File Include="bin/Serilog.dll">
+      <publishTime>10/09/2020 02:20:20</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.Console.dll">
+      <publishTime>12/07/2021 23:13:34</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.File.dll">
+      <publishTime>06/25/2021 08:00:44</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.File.pdb">
+      <publishTime>06/25/2021 08:00:44</publishTime>
+    </File>
     <File Include="bin/System.Buffers.dll">
       <publishTime>07/19/2017 10:01:28</publishTime>
     </File>
@@ -357,6 +373,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>01/23/2014 13:57:34</publishTime>
+    </File>
+    <File Include="chrome-driver/chromedriver.exe">
+      <publishTime>09/23/2021 00:45:36</publishTime>
+    </File>
+    <File Include="chrome-driver/chromedriver_win32.zip">
+      <publishTime>09/28/2021 19:24:01</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>01/28/2021 03:19:54</publishTime>
@@ -449,7 +471,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>01/28/2021 03:19:53</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/12/2021 04:01:03</publishTime>
+      <publishTime>09/28/2021 19:25:30</publishTime>
     </File>
   </ItemGroup>
 </Project>

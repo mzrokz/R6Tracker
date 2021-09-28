@@ -95,7 +95,7 @@ namespace R6T.Scraper
                 htmlDoc.LoadHtml(html);
                 //var htmlBody = htmlDoc.DocumentNode.SelectSingleNode("//body");
 
-                if (DoesPlayerExists(htmlDoc))
+                if (DoesPlayerExists(htmlDoc, oPlayer))
                 {
                     ExtractRank(htmlDoc, oPlayer, pathAppData);
                     if (DoesNewDataExists(oPlayer, htmlDoc))
@@ -120,11 +120,23 @@ namespace R6T.Scraper
             return true;
         }
 
-        public bool DoesPlayerExists(HtmlDocument htmlDoc)
+        public bool DoesPlayerExists(HtmlDocument htmlDoc, Player oPlayer)
         {
-            var playerName = htmlDoc.DocumentNode.SelectSingleNode("//h1[@class='trn-profile-header__name']//span[1]");
+            var playerName = htmlDoc.DocumentNode.SelectSingleNode("//h1[@class='trn-profile-header__title']//span[1]");
             if (playerName != null && !String.IsNullOrEmpty(playerName.InnerText))
             {
+                if (oPlayer != null && oPlayer.LatestAlias != playerName.InnerText)
+                {
+                    using (var r6Model = new R6TrackerEntities())
+                    {
+                        var player = r6Model.Players.SingleOrDefault(s => s.PlayerId == oPlayer.PlayerId);
+                        if (player != null)
+                        {
+                            player.LatestAlias = playerName.InnerText;
+                            r6Model.SaveChanges();
+                        }
+                    }
+                }
                 return true;
             }
 
@@ -178,8 +190,16 @@ namespace R6T.Scraper
                                         var srcNode = htmlDoc.DocumentNode.SelectSingleNode(xpath);
                                         if (srcNode != null)
                                         {
-                                            var data = srcNode.Attributes["src"].Value;
-                                            _scraperFunction.CheckDataType(type, property, instance, data);
+                                            if (srcNode.Attributes.Any(a => a.Name == "src"))
+                                            {
+                                                var data = srcNode.Attributes["src"].Value;
+                                                _scraperFunction.CheckDataType(type, property, instance, data);
+                                            }
+                                            else if (srcNode.Attributes.Any(a => a.Name == "xlink:href"))
+                                            {
+                                                var data = srcNode.Attributes["xlink:href"].Value;
+                                                _scraperFunction.CheckDataType(type, property, instance, data);
+                                            }
                                         }
                                     }
                                 }
@@ -216,7 +236,7 @@ namespace R6T.Scraper
             var imgRankUrl = "https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank0.svg";
             try
             {
-                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='profile']/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/img[1]");
+                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class,'trn-card__content trn-card--light')]//img");
                 if (imgNode != null && imgNode.Attributes.Contains("src"))
                 {
                     imgRankUrl = imgNode.Attributes["src"].Value;
@@ -270,7 +290,7 @@ namespace R6T.Scraper
                 var htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(html);
 
-                if (DoesPlayerExists(htmlDoc))
+                if (DoesPlayerExists(htmlDoc, null))
                 {
                     Player oPlayer = new Player();
                     var url = htmlDoc.DocumentNode

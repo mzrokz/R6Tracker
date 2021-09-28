@@ -6,3 +6,5 @@ bin/
 obj/
 R6T.Scraper/chromedriver.exe
 R6T.WebApi/App_Data/chromedriver.exe
+
+logs

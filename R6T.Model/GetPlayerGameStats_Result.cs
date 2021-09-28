@@ -31,10 +31,9 @@ namespace R6T.Model
         public Nullable<decimal> KD { get; set; }
         public Nullable<decimal> KillPerMatch { get; set; }
         public Nullable<decimal> KillPerMin { get; set; }
-        public string TimePlayed { get; set; }
         public string TotalXp { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<long> LatestRecord { get; set; }
         public string RankUrl { get; set; }
+        public int LatestRecord { get; set; }
     }
 }

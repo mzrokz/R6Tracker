@@ -15,6 +15,7 @@ using System.Web.Http.Results;
 using System.Web.UI.WebControls;
 using PuppeteerSharp;
 using R6T.Scraper;
+using R6T.WebApi.App_Start;
 
 namespace R6T.WebApi.Controllers
 {
@@ -25,12 +26,13 @@ namespace R6T.WebApi.Controllers
 
         public PlayerController()
         {
-            _pathAppData = HttpContext.Current.Server.MapPath("~/App_Data/");
+            _pathAppData = HttpContext.Current.Server.MapPath("~/chrome-driver/");
         }
 
         [HttpGet]
         public IHttpActionResult GetPlayers()
         {
+            Logger.LogInfo("GetPlayers");
             using (var oEntity = new R6TrackerEntities())
             {
                 var players =
@@ -47,7 +49,8 @@ namespace R6T.WebApi.Controllers
                           IsActive = s.IsActive,
                           Url = s.Url,
                           RankUrl = s.RankUrl,
-                          SortOrder = s.SortOrder
+                          SortOrder = s.SortOrder,
+                          LatestAlias = s.LatestAlias
                       }).ToList();
                 return Ok(players);
             }
@@ -65,22 +68,25 @@ namespace R6T.WebApi.Controllers
                 var mapper = MapperProfile.Configuration.CreateMapper();
                 var lstGameStatsVm = mapper.Map<List<GameStatsVm>>(gameStats);
 
-                var maxLatestRecord = lstGameStatsVm.Max(m => m.LatestRecord);
-                for (int i = 1; i <= maxLatestRecord; i++)
+                if (lstGameStatsVm.Any())
                 {
-                    var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
-                    foreach (var record in records)
+                    var maxLatestRecord = lstGameStatsVm.Max(m => m.LatestRecord);
+                    for (int i = 1; i <= maxLatestRecord; i++)
                     {
-                        var nextRecord = lstGameStatsVm.SingleOrDefault(s =>
-                            s.LatestRecord == (record.LatestRecord + 1) && s.MatchTypeId == record.MatchTypeId);
-                        if (nextRecord != null)
+                        var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
+                        foreach (var record in records)
                         {
-                            record.Difference = new GameStatsVm();
-                            record.Difference.MatchesPlayed = record.MatchesPlayed - nextRecord.MatchesPlayed;
-                            record.Difference.Kills = record.Kills - nextRecord.Kills;
-                            record.Difference.Deaths = record.Deaths - nextRecord.Deaths;
-                            record.Difference.Wins = record.Wins - nextRecord.Wins;
-                            record.Difference.Losses = record.Losses - nextRecord.Losses;
+                            var nextRecord = lstGameStatsVm.SingleOrDefault(s =>
+                                s.LatestRecord == (record.LatestRecord + 1) && s.MatchTypeId == record.MatchTypeId);
+                            if (nextRecord != null)
+                            {
+                                record.Difference = new GameStatsVm();
+                                record.Difference.MatchesPlayed = record.MatchesPlayed - nextRecord.MatchesPlayed;
+                                record.Difference.Kills = record.Kills - nextRecord.Kills;
+                                record.Difference.Deaths = record.Deaths - nextRecord.Deaths;
+                                record.Difference.Wins = record.Wins - nextRecord.Wins;
+                                record.Difference.Losses = record.Losses - nextRecord.Losses;
+                            }
                         }
                     }
                 }
@@ -92,10 +98,13 @@ namespace R6T.WebApi.Controllers
         [HttpPost, Route("api/Player/SyncPlayerData")]
         public async Task<IHttpActionResult> SyncPlayerData(Player oPlayer)
         {
+            Logger.LogInfo($"SyncPlayerData - Starting for {oPlayer.PlayerName}");
+
             if (oPlayer != null)
             {
                 try
                 {
+                    Logger.LogInfo("SyncPlayerData - InitSelenium");
                     var oScraper = new Main();
                     oScraper.InitSelenium(_pathAppData);
 
@@ -103,7 +112,9 @@ namespace R6T.WebApi.Controllers
                     //{
                     //    Path = Server.MapPath
                     //}));
+                    Logger.LogInfo($"Start - SyncPlayerData - ScrapeUserData for {oPlayer.PlayerName}");
                     var result = await oScraper.ScrapeUserData(oPlayer, _pathAppData);
+                    Logger.LogInfo($"End - SyncPlayerData - ScrapeUserData for {oPlayer.PlayerName}");
                     if (!result)
                     {
                         return BadRequest("Not Synced");
@@ -111,6 +122,7 @@ namespace R6T.WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
+                    Logger.LogError($"SyncPlayerData - {oPlayer.PlayerName} | {ex.Message}");
                     Console.WriteLine(ex);
                     return BadRequest(ex.Message);
                 }
@@ -139,6 +151,7 @@ namespace R6T.WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
+                    Logger.LogError($"SetActive - {oPlayer.PlayerName} | {ex.Message}");
                     Console.WriteLine(ex);
                     return BadRequest(ex.Message);
                 }
@@ -150,45 +163,46 @@ namespace R6T.WebApi.Controllers
         [HttpPost, Route("api/Player/AddPlayer")]
         public IHttpActionResult AddPlayer(Player oPlayer)
         {
+            Logger.LogInfo($"Start - AddPlayer - {oPlayer.PlayerName}");
             if (oPlayer != null)
             {
                 try
                 {
                     var oEntity = new R6TrackerEntities();
                     var doesPlayerExists = oEntity.Players.Any(a => a.Alias.ToLower() == oPlayer.Alias.ToLower());
-                    if (!doesPlayerExists)
+                    if (doesPlayerExists)
                     {
-                        var oScraper = new Main();
-                        oScraper.InitSelenium(_pathAppData);
-                        var player = oScraper.GetPlayer(oPlayer.Alias);
+                        Logger.LogError($"AddPlayer - {oPlayer.PlayerName} | Player already exists");
+                        return BadRequest("Player already exists");
+                    }
 
-                        if (player != null)
-                        {
-                            oPlayer.PlayerId = Guid.NewGuid();
-                            oPlayer.Url = player.Url;
-                            oPlayer.IsActive = true;
-                            oEntity.Players.Add(oPlayer);
-                            oEntity.SaveChanges();
-                            return Ok(oPlayer);
-                        }
-                        else
-                        {
-                            return BadRequest("Alias doesn't exist");
-                        }
+                    var oScraper = new Main();
+                    oScraper.InitSelenium(_pathAppData);
+                    var player = oScraper.GetPlayer(oPlayer.Alias);
+
+                    if (player != null)
+                    {
+                        oPlayer.PlayerId = Guid.NewGuid();
+                        oPlayer.Url = player.Url;
+                        oPlayer.IsActive = true;
+                        oPlayer.SortOrder = 1;
+                        oEntity.Players.Add(oPlayer);
+                        oEntity.SaveChanges();
+                        return Ok(oPlayer);
                     }
                     else
                     {
-                        return BadRequest("Player already exists");
+                        return BadRequest("Alias doesn't exist");
                     }
-                    return BadRequest();
                 }
                 catch (Exception ex)
                 {
+                    Logger.LogError($"AddPlayer - {oPlayer.PlayerName} | {ex.Message}");
                     Console.WriteLine(ex);
                     return BadRequest(ex.Message);
                 }
             }
-
+            Logger.LogError($"End - AddPlayer - {oPlayer.PlayerName}");
             return Ok();
         }
 
@@ -201,12 +215,14 @@ namespace R6T.WebApi.Controllers
                 var player = oEntity.Players.SingleOrDefault(s => s.PlayerId == playerId);
                 if (player != null)
                 {
+                    Logger.LogInfo($"GetPlayer - Fetched Player from DB - {player.PlayerName}");
                     oPlayer.PlayerId = player.PlayerId;
                     oPlayer.PlayerName = player.PlayerName;
                     oPlayer.Alias = player.Alias;
                     oPlayer.IsActive = player.IsActive;
                     oPlayer.Url = player.Url;
                     oPlayer.RankUrl = player.RankUrl;
+                    oPlayer.LatestAlias = player.LatestAlias;
                 }
                 return Ok(oPlayer);
             }
@@ -245,7 +261,7 @@ namespace R6T.WebApi.Controllers
                             {
                                 if (player.SortOrder > 1)
                                 {
-                                    player.SortOrder = player.SortOrder - 1;
+                                    player.SortOrder = player.SortOrder.Value - 1;
                                 }
                             }
 

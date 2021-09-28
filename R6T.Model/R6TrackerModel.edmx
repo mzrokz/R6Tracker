@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="R6TrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="R6TrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GameStats">
           <Key>
             <PropertyRef Name="GameStatId" />
@@ -15,20 +15,20 @@
           <Property Name="PlayerLevel" Type="int" />
           <Property Name="MatchesPlayed" Type="int" />
           <Property Name="Wins" Type="int" />
-          <Property Name="WinPercent" Type="nvarchar" MaxLength="10" />
           <Property Name="Losses" Type="int" />
           <Property Name="Kills" Type="int" />
           <Property Name="Deaths" Type="int" />
           <Property Name="Headshots" Type="int" />
-          <Property Name="HeadshotPercent" Type="nvarchar" MaxLength="10" />
           <Property Name="MeleeKills" Type="int" />
           <Property Name="BlindKills" Type="int" />
           <Property Name="KD" Type="decimal" Precision="4" Scale="2" />
-          <Property Name="KillPerMatch" Type="decimal" Precision="4" Scale="2" />
-          <Property Name="KillPerMin" Type="decimal" Precision="4" Scale="2" />
           <Property Name="TimePlayed" Type="varchar" MaxLength="20" />
           <Property Name="TotalXp" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="WinPercent" Type="nvarchar" MaxLength="10" />
+          <Property Name="HeadshotPercent" Type="nvarchar" MaxLength="10" />
+          <Property Name="KillPerMatch" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="KillPerMin" Type="decimal" Precision="4" Scale="2" />
           <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="MatchTypes">
@@ -45,10 +45,11 @@
           <Property Name="PlayerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PlayerName" Type="nvarchar" MaxLength="100" />
           <Property Name="Alias" Type="nvarchar" MaxLength="100" />
-          <Property Name="Url" Type="nvarchar" MaxLength="500" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="Url" Type="nvarchar" MaxLength="500" />
           <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
           <Property Name="SortOrder" Type="int" />
+          <Property Name="LatestAlias" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -101,68 +102,11 @@
             <End Role="GameStats" EntitySet="GameStats" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="R6TrackerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="R6TrackerEntities" annotation:LazyLoadingEnabled="true">
-          <FunctionImport Name="sp_alterdiagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="version" Mode="In" Type="Int32" />
-            <Parameter Name="definition" Mode="In" Type="Binary" />
-          </FunctionImport>
-          <FunctionImport Name="sp_creatediagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="version" Mode="In" Type="Int32" />
-            <Parameter Name="definition" Mode="In" Type="Binary" />
-          </FunctionImport>
-          <FunctionImport Name="sp_dropdiagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(R6TrackerModel.sp_helpdiagramdefinition_Result)">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(R6TrackerModel.sp_helpdiagrams_Result)">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_renamediagram">
-            <Parameter Name="diagramname" Mode="In" Type="String" />
-            <Parameter Name="owner_id" Mode="In" Type="Int32" />
-            <Parameter Name="new_diagramname" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="sp_upgraddiagrams" />
-          <EntitySet Name="GameStats" EntityType="R6TrackerModel.GameStat" />
-          <EntitySet Name="MatchTypes" EntityType="R6TrackerModel.MatchType" />
-          <EntitySet Name="Players" EntityType="R6TrackerModel.Player" />
-          <EntitySet Name="sysdiagrams" EntityType="R6TrackerModel.sysdiagram" />
-          <AssociationSet Name="FK_GameStats_MatchType" Association="R6TrackerModel.FK_GameStats_MatchType">
-            <End Role="MatchType" EntitySet="MatchTypes" />
-            <End Role="GameStat" EntitySet="GameStats" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameStats_Player" Association="R6TrackerModel.FK_GameStats_Player">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="GameStat" EntitySet="GameStats" />
-          </AssociationSet>
-          <FunctionImport Name="GetPlayerGameStats" ReturnType="Collection(R6TrackerModel.GetPlayerGameStats_Result)">
-          <Parameter Name="PlayerId" Mode="In" Type="Guid" />
-          </FunctionImport>
-          </EntityContainer>
-        <ComplexType Name="sp_helpdiagramdefinition_Result">
-          <Property Type="Int32" Name="version" Nullable="true" />
-          <Property Type="Binary" Name="definition" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="sp_helpdiagrams_Result">
-          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-          <Property Type="Int32" Name="ID" Nullable="false" />
-          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
-          <Property Type="Int32" Name="OwnerID" Nullable="false" />
-        </ComplexType>
         <EntityType Name="GameStat">
           <Key>
             <PropertyRef Name="GameStatId" />
@@ -183,13 +127,13 @@
           <Property Name="TimePlayed" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="TotalXp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="MatchType" Relationship="R6TrackerModel.FK_GameStats_MatchType" FromRole="GameStat" ToRole="MatchType" />
-          <NavigationProperty Name="Player" Relationship="R6TrackerModel.FK_GameStats_Player" FromRole="GameStat" ToRole="Player" />
           <Property Name="WinPercent" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="HeadshotPercent" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="KillPerMatch" Type="Decimal" Precision="4" Scale="2" />
           <Property Name="KillPerMin" Type="Decimal" Precision="4" Scale="2" />
           <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MatchType" Relationship="Self.FK_GameStats_MatchType" FromRole="GameStats" ToRole="MatchTypes" />
+          <NavigationProperty Name="Player" Relationship="Self.FK_GameStats_Player" FromRole="GameStats" ToRole="Players" />
         </EntityType>
         <EntityType Name="MatchType">
           <Key>
@@ -197,7 +141,7 @@
           </Key>
           <Property Name="MatchTypeId" Type="Int32" Nullable="false" />
           <Property Name="MatchTypeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="GameStats" Relationship="R6TrackerModel.FK_GameStats_MatchType" FromRole="MatchType" ToRole="GameStat" />
+          <NavigationProperty Name="GameStats" Relationship="Self.FK_GameStats_MatchType" FromRole="MatchTypes" ToRole="GameStats" />
         </EntityType>
         <EntityType Name="Player">
           <Key>
@@ -207,45 +151,63 @@
           <Property Name="PlayerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Alias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="GameStats" Relationship="R6TrackerModel.FK_GameStats_Player" FromRole="Player" ToRole="GameStat" />
           <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="SortOrder" Type="Int32" />
+          <Property Name="LatestAlias" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GameStats" Relationship="Self.FK_GameStats_Player" FromRole="Players" ToRole="GameStats" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
             <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="principal_id" Type="Int32" Nullable="false" />
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_GameStats_MatchType">
-          <End Type="R6TrackerModel.MatchType" Role="MatchType" Multiplicity="0..1" />
-          <End Type="R6TrackerModel.GameStat" Role="GameStat" Multiplicity="*" />
+          <End Role="MatchTypes" Type="Self.MatchType" Multiplicity="0..1" />
+          <End Role="GameStats" Type="Self.GameStat" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="MatchType">
+            <Principal Role="MatchTypes">
               <PropertyRef Name="MatchTypeId" />
             </Principal>
-            <Dependent Role="GameStat">
+            <Dependent Role="GameStats">
               <PropertyRef Name="MatchTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_GameStats_Player">
-          <End Type="R6TrackerModel.Player" Role="Player" Multiplicity="0..1" />
-          <End Type="R6TrackerModel.GameStat" Role="GameStat" Multiplicity="*" />
+          <End Role="Players" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="GameStats" Type="Self.GameStat" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Player">
+            <Principal Role="Players">
               <PropertyRef Name="PlayerId" />
             </Principal>
-            <Dependent Role="GameStat">
+            <Dependent Role="GameStats">
               <PropertyRef Name="PlayerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="R6TrackerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GameStats" EntityType="Self.GameStat" />
+          <EntitySet Name="MatchTypes" EntityType="Self.MatchType" />
+          <EntitySet Name="Players" EntityType="Self.Player" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_GameStats_MatchType" Association="Self.FK_GameStats_MatchType">
+            <End Role="MatchTypes" EntitySet="MatchTypes" />
+            <End Role="GameStats" EntitySet="GameStats" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameStats_Player" Association="Self.FK_GameStats_Player">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="GameStats" EntitySet="GameStats" />
+          </AssociationSet>
+          <FunctionImport Name="GetPlayerGameStats" ReturnType="Collection(R6TrackerModel.GetPlayerGameStats_Result)">
+            <Parameter Name="PlayerId" Mode="In" Type="Guid" />
+          </FunctionImport>
+        </EntityContainer>
         <ComplexType Name="GetPlayerGameStats_Result">
           <Property Type="Guid" Name="PlayerId" Nullable="true" />
           <Property Type="String" Name="PlayerName" Nullable="true" MaxLength="100" />
@@ -265,77 +227,77 @@
           <Property Type="Decimal" Name="KD" Nullable="true" Precision="4" Scale="2" />
           <Property Type="Decimal" Name="KillPerMatch" Nullable="true" Precision="4" Scale="2" />
           <Property Type="Decimal" Name="KillPerMin" Nullable="true" Precision="4" Scale="2" />
-          <Property Type="String" Name="TimePlayed" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="TotalXp" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
-          <Property Type="Int64" Name="LatestRecord" Nullable="true" />
           <Property Type="String" Name="RankUrl" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="LatestRecord" Nullable="false" />
         </ComplexType>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="R6TrackerModelStoreContainer" CdmEntityContainer="R6TrackerEntities">
-    <EntitySetMapping Name="GameStats">
-      <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.GameStat)">
-        <MappingFragment StoreEntitySet="GameStats">
-          <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
-                <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
-                <ScalarProperty Name="KillPerMatch" ColumnName="KillPerMatch" />
-                <ScalarProperty Name="HeadshotPercent" ColumnName="HeadshotPercent" />
-                <ScalarProperty Name="WinPercent" ColumnName="WinPercent" />
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="R6TrackerModelStoreContainer" CdmEntityContainer="R6TrackerEntities">
+          <EntitySetMapping Name="GameStats">
+            <EntityTypeMapping TypeName="R6TrackerModel.GameStat">
+              <MappingFragment StoreEntitySet="GameStats">
                 <ScalarProperty Name="GameStatId" ColumnName="GameStatId" />
-          <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
-          <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />
-          <ScalarProperty Name="PlayerLevel" ColumnName="PlayerLevel" />
-          <ScalarProperty Name="MatchesPlayed" ColumnName="MatchesPlayed" />
-          <ScalarProperty Name="Wins" ColumnName="Wins" />
-          <ScalarProperty Name="Losses" ColumnName="Losses" />
-          <ScalarProperty Name="Kills" ColumnName="Kills" />
-          <ScalarProperty Name="Deaths" ColumnName="Deaths" />
-          <ScalarProperty Name="Headshots" ColumnName="Headshots" />
-          <ScalarProperty Name="MeleeKills" ColumnName="MeleeKills" />
-          <ScalarProperty Name="BlindKills" ColumnName="BlindKills" />
-          <ScalarProperty Name="KD" ColumnName="KD" />
-          <ScalarProperty Name="TimePlayed" ColumnName="TimePlayed" />
-          <ScalarProperty Name="TotalXp" ColumnName="TotalXp" />
-          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="MatchTypes">
-      <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.MatchType)">
-        <MappingFragment StoreEntitySet="MatchTypes">
-          <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />
-          <ScalarProperty Name="MatchTypeName" ColumnName="MatchTypeName" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Players">
-      <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.Player)">
-        <MappingFragment StoreEntitySet="Players">
-          <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
-                <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
-          <ScalarProperty Name="PlayerName" ColumnName="PlayerName" />
-          <ScalarProperty Name="Alias" ColumnName="Alias" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="sysdiagrams">
-      <EntityTypeMapping TypeName="IsTypeOf(R6TrackerModel.sysdiagram)">
-        <MappingFragment StoreEntitySet="sysdiagrams">
-          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-          <ScalarProperty Name="name" ColumnName="name" />
-          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-          <ScalarProperty Name="version" ColumnName="version" />
-          <ScalarProperty Name="definition" ColumnName="definition" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
+                <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />
+                <ScalarProperty Name="PlayerLevel" ColumnName="PlayerLevel" />
+                <ScalarProperty Name="MatchesPlayed" ColumnName="MatchesPlayed" />
+                <ScalarProperty Name="Wins" ColumnName="Wins" />
+                <ScalarProperty Name="Losses" ColumnName="Losses" />
+                <ScalarProperty Name="Kills" ColumnName="Kills" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="Headshots" ColumnName="Headshots" />
+                <ScalarProperty Name="MeleeKills" ColumnName="MeleeKills" />
+                <ScalarProperty Name="BlindKills" ColumnName="BlindKills" />
+                <ScalarProperty Name="KD" ColumnName="KD" />
+                <ScalarProperty Name="TimePlayed" ColumnName="TimePlayed" />
+                <ScalarProperty Name="TotalXp" ColumnName="TotalXp" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="WinPercent" ColumnName="WinPercent" />
+                <ScalarProperty Name="HeadshotPercent" ColumnName="HeadshotPercent" />
+                <ScalarProperty Name="KillPerMatch" ColumnName="KillPerMatch" />
+                <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
+                <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MatchTypes">
+            <EntityTypeMapping TypeName="R6TrackerModel.MatchType">
+              <MappingFragment StoreEntitySet="MatchTypes">
+                <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />
+                <ScalarProperty Name="MatchTypeName" ColumnName="MatchTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="R6TrackerModel.Player">
+              <MappingFragment StoreEntitySet="Players">
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="PlayerName" ColumnName="PlayerName" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="LatestAlias" ColumnName="LatestAlias" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="R6TrackerModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetPlayerGameStats" FunctionName="R6TrackerModel.Store.GetPlayerGameStats">
             <ResultMapping>
               <ComplexTypeMapping TypeName="R6TrackerModel.GetPlayerGameStats_Result">
@@ -357,16 +319,16 @@
                 <ScalarProperty Name="KD" ColumnName="KD" />
                 <ScalarProperty Name="KillPerMatch" ColumnName="KillPerMatch" />
                 <ScalarProperty Name="KillPerMin" ColumnName="KillPerMin" />
-                <ScalarProperty Name="TimePlayed" ColumnName="TimePlayed" />
                 <ScalarProperty Name="TotalXp" ColumnName="TotalXp" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="LatestRecord" ColumnName="LatestRecord" />
                 <ScalarProperty Name="RankUrl" ColumnName="RankUrl" />
+                <ScalarProperty Name="LatestRecord" ColumnName="LatestRecord" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-  </EntityContainerMapping>
-</Mapping></edmx:Mappings>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -380,7 +342,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
