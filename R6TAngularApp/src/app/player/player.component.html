@@ -1,180 +1,195 @@
 <div class="layout">
-  <div class="section-right">
-    <div class="player-container">
-      <ng-container *ngFor="let player of players">
-        <div class="player" [ngClass]="{'selected' : player.Selected == true}">
-          <div class="card">
-            <div class="body">
-              <div>
-                <img class="imgRank" [src]="player.RankUrl">
-              </div>
-              <div>
-                <div class="toolbarIcons">
-                  <fa-icon class="isActive" [ngClass]="{'active':player.IsActive,'inActive':!player.IsActive}"
-                    [icon]="powerOff" (click)="setActive(player)"></fa-icon>
-                  <fa-icon class="link" [icon]="link" (click)="gotoR6Tracker(player)"></fa-icon>
-                  <fa-icon class="sortButton" [icon]="sortUp" (click)="setSort(player, 'up')"></fa-icon>
-                  <fa-icon class="sortButton" [icon]="sortDown" (click)="setSort(player, 'down')"></fa-icon>
-                  <fa-icon class="syncStart" *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true">
-                  </fa-icon>
-                  <fa-icon class="syncSuccess" *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
-                  <fa-icon class="syncError" *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
-                </div>
-                <div>{{player.PlayerName}}</div>
-                <div class="latestAlias">{{player.LatestAlias}}</div>
-              </div>
-            </div>
-            <div class="footer">
-              <div class="action-buttons">
-                <dx-button stylingMode="contained" text="Get Data" type="default" [width]="120"
-                  (onClick)="getPlayerGameStats(player)">
-                </dx-button>
-                <dx-button stylingMode="contained" text="Sync Player Data" type="default" [width]="120"
-                  (onClick)="syncPlayerData(player)">
-                </dx-button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-  </div>
+	<div class="section-right">
+		<div class="player-container">
+			<ng-container *ngFor="let player of players">
+				<div class="player" [ngClass]="{ selected: player.Selected == true }">
+					<div class="card">
+						<div class="body">
+							<div>
+								<img class="imgRank" [src]="player.RankUrl" />
+							</div>
+							<div>
+								<div class="toolbarIcons">
+									<fa-icon
+										class="isActive"
+										[ngClass]="{
+											active: player.IsActive,
+											inActive: !player.IsActive
+										}"
+										[icon]="powerOff"
+										(click)="setActive(player)"
+									></fa-icon>
+									<fa-icon class="link" [icon]="link" (click)="gotoR6Tracker(player)"></fa-icon>
+									<fa-icon class="sortButton" [icon]="sortUp" (click)="setSort(player, 'up')"></fa-icon>
+									<fa-icon class="sortButton" [icon]="sortDown" (click)="setSort(player, 'down')"></fa-icon>
+									<fa-icon class="syncStart" *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"> </fa-icon>
+									<fa-icon class="syncSuccess" *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
+									<fa-icon class="syncError" *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
+								</div>
+								<div>{{ player.PlayerName }}</div>
+								<div class="latestAlias">{{ player.LatestAlias }}</div>
+							</div>
+						</div>
+						<div class="footer">
+							<div class="action-buttons">
+								<dx-button stylingMode="contained" text="Get Data" type="default" [width]="120" (onClick)="getPlayerGameStats(player)"> </dx-button>
+								<dx-button stylingMode="contained" text="Sync Player Data" type="default" [width]="120" (onClick)="syncPlayerData(player)">
+								</dx-button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+	</div>
 
-  <div class="section">
-    <!-- (onContentReady)="contentReady($event)" -->
-    <dx-data-grid id="gridContainer" [dataSource]="playerGameStats" [remoteOperations]="false"
-      [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true" [allowColumnResizing]="true"
-      [height]="'90vh'">
+	<div class="section">
+		<!-- (onContentReady)="contentReady($event)" -->
+		<dx-data-grid
+			id="gridContainer"
+			[dataSource]="playerGameStats"
+			[remoteOperations]="false"
+			[allowColumnReordering]="true"
+			[rowAlternationEnabled]="true"
+			[showBorders]="true"
+			[allowColumnResizing]="true"
+			[height]="'90vh'"
+		>
+			<dxo-paging [pageSize]="20"></dxo-paging>
+			<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100, 500]"></dxo-pager>
+			<!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
+			<dxo-filter-row [visible]="true"></dxo-filter-row>
+			<dxo-group-panel [visible]="true"></dxo-group-panel>
+			<dxo-grouping [autoExpandAll]="false"></dxo-grouping>
 
-      <dxo-paging [pageSize]="20"></dxo-paging>
-      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 50, 100, 500]"></dxo-pager>
-      <!-- <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel> -->
-      <dxo-filter-row [visible]="true"></dxo-filter-row>
-      <dxo-group-panel [visible]="true"></dxo-group-panel>
-      <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+			<dxi-column dataField="PlayerLevel"></dxi-column>
+			<!-- ----------------------------------------------------------------------------------------------------- CreatedDate -->
+			<dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'dateCellTemplate'">
+				<span>{{ d.value | date: "dd MMM YY" }}</span>
+				<!-- <span>{{d.value}}</span> -->
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- MatchTypeName -->
+			<dxi-column dataField="MatchTypeName"></dxi-column>
+			<div *dxTemplate="let d of 'matchTypeCellTemplate'">
+				<div *ngIf="d.value == 1" class="">General</div>
+				<div *ngIf="d.value == 2" class="">Ranked</div>
+				<div *ngIf="d.value == 3" class="">Unranked</div>
+				<div *ngIf="d.value == 4" class="">Casual</div>
+			</div>
+			<!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- MatchesPlayed -->
+			<dxi-column dataField="MatchesPlayed" cellTemplate="matchesPlayedCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'matchesPlayedCellTemplate'">
+				<span
+					id="matchesPlayed-{{ d.rowIndex }}"
+					(mouseenter)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed"
+					(mouseleave)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed"
+					>{{ d.value }}</span
+				>
 
-      <dxi-column dataField="PlayerLevel"></dxi-column>
-      <!-- ----------------------------------------------------------------------------------------------------- CreatedDate -->
-      <dxi-column dataField="CreatedDate" cellTemplate="dateCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'dateCellTemplate'">
-        <span>{{d.value | date: "dd MMM YY"}}</span>
-        <!-- <span>{{d.value}}</span> -->
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- MatchTypeName -->
-      <dxi-column dataField="MatchTypeName"></dxi-column>
-      <div *dxTemplate="let d of 'matchTypeCellTemplate'">
-        <div *ngIf="d.value==1" class="">
-          General
-        </div>
-        <div *ngIf="d.value==2" class="">
-          Ranked
-        </div>
-        <div *ngIf="d.value==3" class="">
-          Unranked
-        </div>
-        <div *ngIf="d.value==4" class="">
-          Casual
-        </div>
-      </div>
-      <!-- <dxi-column dataField="MatchTypeId" cellTemplate="matchTypeCellTemplate"></dxi-column> -->
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- MatchesPlayed -->
-      <dxi-column dataField="MatchesPlayed" cellTemplate="matchesPlayedCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'matchesPlayedCellTemplate'">
-        <span id="matchesPlayed-{{d.rowIndex}}" (mouseenter)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed"
-          (mouseleave)="d.showTooltipMatchesPlayed = !d.showTooltipMatchesPlayed">{{d.value}}</span>
+				<dx-tooltip target="#matchesPlayed-{{ d.rowIndex }}" position="right" [(visible)]="d.showTooltipMatchesPlayed" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<span *ngIf="d.data.Difference">{{ d.data.Difference.MatchesPlayed }}</span>
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<dxi-column dataField="KD"></dxi-column>
+			<!-- ----------------------------------------------------------------------------------------------------- RankUrl -->
+			<dxi-column dataField="RankUrl" cellTemplate="imgRankCellTemplate"></dxi-column>
+			<div id="imgRank-{{ d.rowIndex }}" class="imgRank" *dxTemplate="let d of 'imgRankCellTemplate'">
+				<ng-container *ngIf="d.value">
+					<img [src]="d.value" (mouseenter)="showImgRankTooltip(d)" (mouseleave)="showImgRankTooltip(d)" />
+				</ng-container>
 
-        <dx-tooltip target="#matchesPlayed-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipMatchesPlayed"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <span *ngIf="d.data.Difference">{{d.data.Difference.MatchesPlayed}}</span>
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <dxi-column dataField="KD"></dxi-column>
-      <!-- ----------------------------------------------------------------------------------------------------- RankUrl -->
-      <dxi-column dataField="RankUrl" cellTemplate="imgRankCellTemplate"></dxi-column>
-      <div id="imgRank-{{d.rowIndex}}" class="imgRank" *dxTemplate="let d of 'imgRankCellTemplate'">
-        <ng-container *ngIf="d.value">
-          <img [src]="d.value" (mouseenter)="showImgRankTooltip(d)" (mouseleave)="showImgRankTooltip(d)">
-        </ng-container>
+				<dx-tooltip target="#imgRank-{{ d.rowIndex }}" position="right" [(visible)]="d.showToolTip" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<img width="50" [src]="d.value" />
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- Kills -->
+			<dxi-column dataField="Kills" cellTemplate="killsCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'killsCellTemplate'">
+				<span
+					id="kills-{{ d.rowIndex }}"
+					(mouseenter)="d.showTooltipKills = !d.showTooltipKills"
+					(mouseleave)="d.showTooltipKills = !d.showTooltipKills"
+					>{{ d.value }}</span
+				>
 
-        <dx-tooltip target="#imgRank-{{d.rowIndex}}" position="right" [(visible)]="d.showToolTip"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <img width='50' [src]="d.value">
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- Kills -->
-      <dxi-column dataField="Kills" cellTemplate="killsCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'killsCellTemplate'">
-        <span id="kills-{{d.rowIndex}}" (mouseenter)="d.showTooltipKills = !d.showTooltipKills"
-          (mouseleave)="d.showTooltipKills = !d.showTooltipKills">{{d.value}}</span>
+				<dx-tooltip target="#kills-{{ d.rowIndex }}" position="right" [(visible)]="d.showTooltipKills" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<span *ngIf="d.data.Difference">{{ d.data.Difference.Kills }}</span>
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- Deaths -->
+			<dxi-column dataField="Deaths" cellTemplate="deathCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'deathCellTemplate'">
+				<span
+					id="deaths-{{ d.rowIndex }}"
+					(mouseenter)="d.showTooltipDeaths = !d.showTooltipDeaths"
+					(mouseleave)="d.showTooltipDeaths = !d.showTooltipDeaths"
+					>{{ d.value }}</span
+				>
 
-        <dx-tooltip target="#kills-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipKills"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <span *ngIf="d.data.Difference">{{d.data.Difference.Kills}}</span>
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- Deaths -->
-      <dxi-column dataField="Deaths" cellTemplate="deathCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'deathCellTemplate'">
-        <span id="deaths-{{d.rowIndex}}" (mouseenter)="d.showTooltipDeaths = !d.showTooltipDeaths"
-          (mouseleave)="d.showTooltipDeaths = !d.showTooltipDeaths">{{d.value}}</span>
+				<dx-tooltip target="#deaths-{{ d.rowIndex }}" position="right" [(visible)]="d.showTooltipDeaths" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<span *ngIf="d.data.Difference">{{ d.data.Difference.Deaths }}</span>
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- Wins -->
+			<dxi-column dataField="Wins" cellTemplate="winCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'winCellTemplate'">
+				<span
+					id="wins-{{ d.rowIndex }}"
+					(mouseenter)="d.showTooltipWins = !d.showTooltipWins"
+					(mouseleave)="d.showTooltipWins = !d.showTooltipWins"
+					>{{ d.value }}</span
+				>
 
-        <dx-tooltip target="#deaths-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipDeaths"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <span *ngIf="d.data.Difference">{{d.data.Difference.Deaths}}</span>
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- Wins -->
-      <dxi-column dataField="Wins" cellTemplate="winCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'winCellTemplate'">
-        <span id="wins-{{d.rowIndex}}" (mouseenter)="d.showTooltipWins = !d.showTooltipWins"
-          (mouseleave)="d.showTooltipWins = !d.showTooltipWins">{{d.value}}</span>
+				<dx-tooltip target="#wins-{{ d.rowIndex }}" position="right" [(visible)]="d.showTooltipWins" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<span *ngIf="d.data.Difference">{{ d.data.Difference.Wins }}</span>
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<!-- ----------------------------------------------------------------------------------------------------- Losses -->
+			<dxi-column dataField="Losses" cellTemplate="lossCellTemplate"></dxi-column>
+			<div *dxTemplate="let d of 'lossCellTemplate'">
+				<span
+					id="loss-{{ d.rowIndex }}"
+					(mouseenter)="d.showTooltipLosses = !d.showTooltipLosses"
+					(mouseleave)="d.showTooltipLosses = !d.showTooltipLosses"
+					>{{ d.value }}</span
+				>
 
-        <dx-tooltip target="#wins-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipWins"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <span *ngIf="d.data.Difference">{{d.data.Difference.Wins}}</span>
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <!-- ----------------------------------------------------------------------------------------------------- Losses -->
-      <dxi-column dataField="Losses" cellTemplate="lossCellTemplate"></dxi-column>
-      <div *dxTemplate="let d of 'lossCellTemplate'">
-        <span id="loss-{{d.rowIndex}}" (mouseenter)="d.showTooltipLosses = !d.showTooltipLosses"
-          (mouseleave)="d.showTooltipLosses = !d.showTooltipLosses">{{d.value}}</span>
-
-        <dx-tooltip target="#loss-{{d.rowIndex}}" position="right" [(visible)]="d.showTooltipLosses"
-          [closeOnOutsideClick]="false">
-          <div *dxTemplate="let data = data of 'content'">
-            <span *ngIf="d.data.Difference">{{d.data.Difference.Losses}}</span>
-          </div>
-        </dx-tooltip>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------- -->
-      <dxi-column dataField="WinPercent"></dxi-column>
-      <dxi-column dataField="BlindKills"></dxi-column>
-      <dxi-column dataField="HeadshotPercent"></dxi-column>
-      <dxi-column dataField="Headshots"></dxi-column>
-      <dxi-column dataField="KillPerMatch"></dxi-column>
-      <dxi-column dataField="KillPerMin"></dxi-column>
-      <dxi-column dataField="MeleeKills"></dxi-column>
-      <dxi-column dataField="TimePlayed"></dxi-column>
-      <dxi-column dataField="TotalXp"></dxi-column>
-      <dxi-column dataField="LatestRecord"></dxi-column>
-    </dx-data-grid>
-  </div>
+				<dx-tooltip target="#loss-{{ d.rowIndex }}" position="right" [(visible)]="d.showTooltipLosses" [closeOnOutsideClick]="false">
+					<div *dxTemplate="let data = data; of: 'content'">
+						<span *ngIf="d.data.Difference">{{ d.data.Difference.Losses }}</span>
+					</div>
+				</dx-tooltip>
+			</div>
+			<!-- ----------------------------------------------------------------------------------------------------- -->
+			<dxi-column dataField="WinPercent"></dxi-column>
+			<dxi-column dataField="BlindKills"></dxi-column>
+			<dxi-column dataField="HeadshotPercent"></dxi-column>
+			<dxi-column dataField="Headshots"></dxi-column>
+			<dxi-column dataField="KillPerMatch"></dxi-column>
+			<dxi-column dataField="KillPerMin"></dxi-column>
+			<dxi-column dataField="MeleeKills"></dxi-column>
+			<dxi-column dataField="TimePlayed"></dxi-column>
+			<dxi-column dataField="TotalXp"></dxi-column>
+			<dxi-column dataField="LatestRecord"></dxi-column>
+		</dx-data-grid>
+	</div>
 </div>

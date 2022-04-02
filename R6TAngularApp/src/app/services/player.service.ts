@@ -3,39 +3,40 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root',
 })
 export class PlayerService {
+	constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient
-  ) { }
+	getPlayers() {
+		return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayers');
+	}
 
-  getPlayers() {
-    return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayers')
-  }
+	getPlayerGameStats(playerId: any) {
+		return this.http.get<any>(environment.apiUrl + 'api/Player/GetGameStats?playerId=' + playerId);
+	}
 
-  getPlayerGameStats(playerId: any) {
-    return this.http.get<any>(environment.apiUrl + 'api/Player/GetGameStats?playerId=' + playerId)
-  }
+	syncPlayerData(player: any) {
+		return this.http.post<any>(environment.apiUrl + 'api/Player/SyncPlayerData', player);
+	}
 
-  syncPlayerData(player: any) {
-    return this.http.post<any>(environment.apiUrl + 'api/Player/SyncPlayerData', player);
-  }
+	setActive(player: any) {
+		return this.http.post<any>(environment.apiUrl + 'api/Player/SetActive', player);
+	}
 
-  setActive(player: any) {
-    return this.http.post<any>(environment.apiUrl + 'api/Player/SetActive', player);
-  }
+	addPlayer(player: any) {
+		return this.http.post<any>(environment.apiUrl + 'api/Player/AddPlayer', player);
+	}
 
-  addPlayer(player: any) {
-    return this.http.post<any>(environment.apiUrl + 'api/Player/AddPlayer', player);
-  }
+	getPlayer(player: any) {
+		return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayer?playerId=' + player.PlayerId);
+	}
 
-  getPlayer(player: any) {
-    return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayer?playerId=' + player.PlayerId)
-  }
+	setSort(player: any) {
+		return this.http.post<any>(environment.apiUrl + 'api/Player/SetSort', player);
+	}
 
-  setSort(player: any) {
-    return this.http.post<any>(environment.apiUrl + 'api/Player/SetSort', player);
-  }
+	getPlayerMmr(playerId: string) {
+		return this.http.get<any>(environment.apiUrl + 'api/Player/GetPlayerMmr?playerId=' + playerId);
+	}
 }

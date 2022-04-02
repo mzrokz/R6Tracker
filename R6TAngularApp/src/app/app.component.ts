@@ -2,25 +2,23 @@ import { Component, Output, ViewChild } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'R6TAngularApp';
+	title = 'R6TAngularApp';
 
-  @ViewChild(PlayerComponent)
-  playerView!: PlayerComponent;
+	@ViewChild(PlayerComponent)
+	playerView!: PlayerComponent;
 
-  constructor() {
+	constructor() {}
 
-  }
+	onPlayerAdd() {
+		this.playerView.getPlayers();
+	}
 
-  onPlayerAdd() {
-    this.playerView.getPlayers();
-  }
-
-  syncAllPlayers() {
-    this.playerView.syncAllPlayers();
-  }
+	syncAllPlayers() {
+		this.playerView.syncAllPlayers();
+	}
 }

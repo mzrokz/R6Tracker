@@ -1,133 +1,131 @@
 .layout {
-  display: grid;
-  grid-template-columns: 15vw auto;
+	display: grid;
+	grid-template-columns: 15vw auto;
 
-  .section-right {
+	.section-right {
+		.player-container {
+			// width: 95vw;
+			// overflow-x: auto;
+			// white-space: nowrap;
+			// margin-left: 2vw;
+			// margin-right: 2vw;
 
-    .player-container {
-      // width: 95vw;
-      // overflow-x: auto;
-      // white-space: nowrap;
-      // margin-left: 2vw;
-      // margin-right: 2vw;
+			height: 95vh;
+			overflow-y: scroll;
+			overflow-x: hidden;
 
-      height: 95vh;
-      overflow-y: scroll;
-      overflow-x: hidden;
+			.player {
+				// display: grid;
+				// grid-template-columns: 1fr 1fr 1fr 1fr;
 
-      .player {
-        // display: grid;
-        // grid-template-columns: 1fr 1fr 1fr 1fr;
+				display: inline-flex;
+				height: 100px;
+				width: 250px;
 
-        display: inline-flex;
-        height: 100px;
-        width: 250px;
+				border: 1px solid lightgray;
+				border-radius: 5px;
+				padding: 5px;
+				margin-bottom: 10px;
 
-        border: 1px solid lightgray;
-        border-radius: 5px;
-        padding: 5px;
-        margin-bottom: 10px;
+				// &:hover {
+				//   background-color: aquamarine;
+				// }
 
-        // &:hover {
-        //   background-color: aquamarine;
-        // }
+				.sync {
+					width: 20px;
+					display: inline-flex;
+					float: right;
+				}
 
-        .sync {
-          width: 20px;
-          display: inline-flex;
-          float: right;
+				.card {
+					width: 250px;
 
+					.body {
+						display: grid;
+						grid-template-columns: 50px 250px;
 
-        }
+						.imgRank {
+							width: 50px;
+						}
 
-        .card {
-          width: 300px;
+						.latestAlias {
+							font-size: 11px;
+						}
+					}
 
-          .body {
-            display: grid;
-            grid-template-columns: 50px 250px;
+					.action-buttons {
+						dx-button {
+							margin-right: 5px;
+						}
+					}
+				}
 
-            .imgRank {
-              width: 50px;
-            }
+				.mmr {
+					float: right;
+				}
+			}
 
-            .latestAlias {
-              font-size: 11px;
-            }
-          }
+			.selected {
+				background-color: #d5ecff;
+			}
 
-          .action-buttons {
-            dx-button {
-              margin-right: 5px;
-            }
-          }
-        }
-      }
+			.toolbarIcons {
+				fa-icon {
+					font-size: 12px;
+					margin-right: 3px;
 
-      .selected {
-        background-color: #d5ecff;
-      }
+					&.syncStart {
+						color: rgb(0, 0, 0);
+					}
 
-      .toolbarIcons {
-        fa-icon {
-          font-size: 12px;
-          margin-right: 3px;
+					&.syncSuccess {
+						color: rgb(0, 106, 0);
+					}
 
-          &.syncStart {
-            color: rgb(0, 0, 0);
-          }
+					&.syncError {
+						color: rgb(181, 0, 0);
+					}
+				}
 
-          &.syncSuccess {
-            color: rgb(0, 106, 0);
-          }
+				.isActive {
+					cursor: pointer;
 
-          &.syncError {
-            color: rgb(181, 0, 0);
-          }
-        }
+					&.active {
+						color: rgb(0, 106, 0);
+					}
 
-        .isActive {
-          cursor: pointer;
+					&.inActive {
+						color: rgb(181, 0, 0);
+					}
+				}
 
-          &.active {
-            color: rgb(0, 106, 0);
-          }
+				.link {
+					cursor: pointer;
+					color: #c76500;
+				}
 
-          &.inActive {
-            color: rgb(181, 0, 0);
-          }
-        }
+				img {
+					width: 19px;
+					vertical-align: bottom;
+				}
 
-        .link {
-          cursor: pointer;
-          color: #c76500;
-        }
+				.sortButton {
+					cursor: pointer;
+					color: rgb(0, 106, 0);
+				}
+			}
+		}
+	}
 
-        img {
-          width: 19px;
-          vertical-align: bottom;
-        }
+	.section {
+		#gridContainer {
+			.imgRank {
+				text-align: center;
 
-        .sortButton {
-          cursor: pointer;
-          color: rgb(0, 106, 0);
-        }
-      }
-    }
-
-  }
-
-  .section {
-    #gridContainer {
-
-      .imgRank {
-        text-align: center;
-
-        img {
-          width: 20px;
-        }
-      }
-
-    }
-  }
+				img {
+					width: 20px;
+				}
+			}
+		}
+	}
 }

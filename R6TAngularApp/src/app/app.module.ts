@@ -12,31 +12,19 @@ import { PlayerComponent } from './player/player.component';
 import { AddPlayerComponent } from './player/add-player/add-player.component';
 import { FormsModule } from '@angular/forms';
 
-
 const DxiModules = [
-  // DX -------------------
-  DxDataGridModule,
-  DxButtonModule,
-  DxPopupModule,
-  DxTooltipModule,
-  // DXI -------------------
-  DxiColumnModule
-]
+	// DX -------------------
+	DxDataGridModule,
+	DxButtonModule,
+	DxPopupModule,
+	DxTooltipModule,
+	// DXI -------------------
+	DxiColumnModule,
+];
 @NgModule({
-  declarations: [
-    AppComponent,
-    PlayerComponent,
-    AddPlayerComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    ...DxiModules,
-    FontAwesomeModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [AppComponent, PlayerComponent, AddPlayerComponent],
+	imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ...DxiModules, FontAwesomeModule],
+	providers: [],
+	bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
