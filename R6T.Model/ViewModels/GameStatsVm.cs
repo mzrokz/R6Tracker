@@ -117,6 +117,12 @@ namespace R6T.Model.ViewModels
         public long LatestRecord { get; set; }
         public Nullable<int> MatchTypeId { get; set; }
         public string MatchTypeName { get; set; }
+        [AttachXPath(
+           "",
+           "/html/body/div[4]/div[2]/div[3]/div[1]/div[4]/div[2]/div[1]/div[2]/div/div[11]/div[2]",
+           "",
+           "/html/body/div[4]/div[2]/div[3]/div[1]/div[4]/div[2]/div[2]/div[2]/div/div[11]/div[2]")]
+        public Nullable<int> MMR { get; set; }
 
         public GameStatsVm Difference { get; set; }
         public MatchType MatchType { get; set; }

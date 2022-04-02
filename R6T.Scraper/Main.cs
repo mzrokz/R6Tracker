@@ -236,22 +236,17 @@ namespace R6T.Scraper
             var imgRankUrl = "https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank0.svg";
             try
             {
-                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class,'trn-card__content trn-card--light')]//img");
+                var imgNode = htmlDoc.DocumentNode.SelectSingleNode("/html/body/div[4]/div[2]/div[3]/div[2]/div[1]/div[1]/div[2]/div[1]/img");
                 if (imgNode != null && imgNode.Attributes.Contains("src"))
                 {
                     imgRankUrl = imgNode.Attributes["src"].Value;
 
                     if (!String.IsNullOrEmpty(imgRankUrl))
                     {
-                        //https://trackercdn.com/cdn/r6.tracker.network/ranks/svg/hd-rank16.svg
                         if (!imgRankUrl.Contains("trackercdn.com") && !imgRankUrl.Contains("r6.tracker.network"))
                         {
                             imgRankUrl = "http://r6.tracker.network" + imgRankUrl;
                         }
-                        //using (WebClient client = new WebClient())
-                        //{
-                        //    client.DownloadFile(new Uri(imgRankUrl), $"{pathAppData}playerRanks\\{oPlayer.PlayerId}.svg");
-                        //}
                     }
                 }
 

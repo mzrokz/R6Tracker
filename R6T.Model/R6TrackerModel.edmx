@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="R6TrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="R6TrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GameStats">
           <Key>
             <PropertyRef Name="GameStatId" />
@@ -30,6 +30,7 @@
           <Property Name="KillPerMatch" Type="decimal" Precision="4" Scale="2" />
           <Property Name="KillPerMin" Type="decimal" Precision="4" Scale="2" />
           <Property Name="RankUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="MMR" Type="int" />
         </EntityType>
         <EntityType Name="MatchTypes">
           <Key>
@@ -102,8 +103,7 @@
             <End Role="GameStats" EntitySet="GameStats" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="R6TrackerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -134,6 +134,7 @@
           <Property Name="RankUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MatchType" Relationship="Self.FK_GameStats_MatchType" FromRole="GameStats" ToRole="MatchTypes" />
           <NavigationProperty Name="Player" Relationship="Self.FK_GameStats_Player" FromRole="GameStats" ToRole="Players" />
+          <Property Name="MMR" Type="Int32" />
         </EntityType>
         <EntityType Name="MatchType">
           <Key>
@@ -205,7 +206,7 @@
             <End Role="GameStats" EntitySet="GameStats" />
           </AssociationSet>
           <FunctionImport Name="GetPlayerGameStats" ReturnType="Collection(R6TrackerModel.GetPlayerGameStats_Result)">
-            <Parameter Name="PlayerId" Mode="In" Type="Guid" />
+          <Parameter Name="PlayerId" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetPlayerGameStats_Result">
@@ -230,7 +231,7 @@
           <Property Type="String" Name="TotalXp" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
           <Property Type="String" Name="RankUrl" Nullable="true" MaxLength="500" />
-          <Property Type="Int32" Name="LatestRecord" Nullable="false" />
+          <Property Type="Int64" Name="LatestRecord" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -241,6 +242,7 @@
           <EntitySetMapping Name="GameStats">
             <EntityTypeMapping TypeName="R6TrackerModel.GameStat">
               <MappingFragment StoreEntitySet="GameStats">
+                <ScalarProperty Name="MMR" ColumnName="MMR" />
                 <ScalarProperty Name="GameStatId" ColumnName="GameStatId" />
                 <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
                 <ScalarProperty Name="MatchTypeId" ColumnName="MatchTypeId" />

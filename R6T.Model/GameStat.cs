@@ -35,6 +35,7 @@ namespace R6T.Model
         public Nullable<decimal> KillPerMatch { get; set; }
         public Nullable<decimal> KillPerMin { get; set; }
         public string RankUrl { get; set; }
+        public Nullable<int> MMR { get; set; }
     
         public virtual MatchType MatchType { get; set; }
         public virtual Player Player { get; set; }

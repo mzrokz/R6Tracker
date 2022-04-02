@@ -59,39 +59,46 @@ namespace R6T.WebApi.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetGameStats(Guid playerId)
         {
-            using (var oEntity = new R6TrackerEntities())
+            try
             {
-                //var gameStats = oEntity.GameStats.Where(w => w.PlayerId == playerId).ToList();
-
-                var gameStats = oEntity.GetPlayerGameStats(playerId).ToList();
-
-                var mapper = MapperProfile.Configuration.CreateMapper();
-                var lstGameStatsVm = mapper.Map<List<GameStatsVm>>(gameStats);
-
-                if (lstGameStatsVm.Any())
+                using (var oEntity = new R6TrackerEntities())
                 {
-                    var maxLatestRecord = lstGameStatsVm.Max(m => m.LatestRecord);
-                    for (int i = 1; i <= maxLatestRecord; i++)
+                    //var gameStats = oEntity.GameStats.Where(w => w.PlayerId == playerId).ToList();
+
+                    var gameStats = oEntity.GetPlayerGameStats(playerId).ToList();
+
+                    var mapper = MapperProfile.Configuration.CreateMapper();
+                    var lstGameStatsVm = mapper.Map<List<GameStatsVm>>(gameStats);
+
+                    if (lstGameStatsVm.Any())
                     {
-                        var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
-                        foreach (var record in records)
+                        var maxLatestRecord = lstGameStatsVm.Max(m => m.LatestRecord);
+                        for (int i = 1; i <= maxLatestRecord; i++)
                         {
-                            var nextRecord = lstGameStatsVm.SingleOrDefault(s =>
-                                s.LatestRecord == (record.LatestRecord + 1) && s.MatchTypeId == record.MatchTypeId);
-                            if (nextRecord != null)
+                            var records = lstGameStatsVm.Where(w => w.LatestRecord == i).ToList();
+                            foreach (var record in records)
                             {
-                                record.Difference = new GameStatsVm();
-                                record.Difference.MatchesPlayed = record.MatchesPlayed - nextRecord.MatchesPlayed;
-                                record.Difference.Kills = record.Kills - nextRecord.Kills;
-                                record.Difference.Deaths = record.Deaths - nextRecord.Deaths;
-                                record.Difference.Wins = record.Wins - nextRecord.Wins;
-                                record.Difference.Losses = record.Losses - nextRecord.Losses;
+                                var nextRecord = lstGameStatsVm.SingleOrDefault(s =>
+                                    s.LatestRecord == (record.LatestRecord + 1) && s.MatchTypeId == record.MatchTypeId);
+                                if (nextRecord != null)
+                                {
+                                    record.Difference = new GameStatsVm();
+                                    record.Difference.MatchesPlayed = record.MatchesPlayed - nextRecord.MatchesPlayed;
+                                    record.Difference.Kills = record.Kills - nextRecord.Kills;
+                                    record.Difference.Deaths = record.Deaths - nextRecord.Deaths;
+                                    record.Difference.Wins = record.Wins - nextRecord.Wins;
+                                    record.Difference.Losses = record.Losses - nextRecord.Losses;
+                                }
                             }
                         }
                     }
-                }
 
-                return Ok(lstGameStatsVm);
+                    return Ok(lstGameStatsVm);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
         }
 
@@ -278,6 +285,22 @@ namespace R6T.WebApi.Controllers
                 }
             }
             return Ok();
+        }
+
+        [HttpGet, Route("api/Player/GetPlayerMmr")]
+        public async Task<IHttpActionResult> GetPlayerMmr(Guid playerId)
+        {
+            var oEntity = new R6TrackerEntities();
+            try
+            {
+                var latestRankedGameStat = oEntity.GetPlayerGameStats(playerId).Where(w => w.LatestRecord == 1 && w.MatchTypeId == Convert.ToInt32(EMatchType.Ranked));
+                return Ok(latestRankedGameStat);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
