@@ -2,43 +2,7 @@
 	<div class="section-right">
 		<div class="player-container">
 			<ng-container *ngFor="let player of players">
-				<div class="player" [ngClass]="{ selected: player.Selected == true }">
-					<div class="card">
-						<div class="body">
-							<div>
-								<img class="imgRank" [src]="player.RankUrl" />
-							</div>
-							<div>
-								<div class="toolbarIcons">
-									<fa-icon
-										class="isActive"
-										[ngClass]="{
-											active: player.IsActive,
-											inActive: !player.IsActive
-										}"
-										[icon]="powerOff"
-										(click)="setActive(player)"
-									></fa-icon>
-									<fa-icon class="link" [icon]="link" (click)="gotoR6Tracker(player)"></fa-icon>
-									<fa-icon class="sortButton" [icon]="sortUp" (click)="setSort(player, 'up')"></fa-icon>
-									<fa-icon class="sortButton" [icon]="sortDown" (click)="setSort(player, 'down')"></fa-icon>
-									<fa-icon class="syncStart" *ngIf="player.syncStart == true" [icon]="syncStart" [spin]="true"> </fa-icon>
-									<fa-icon class="syncSuccess" *ngIf="player.syncSuccess == true" [icon]="syncSuccess"></fa-icon>
-									<fa-icon class="syncError" *ngIf="player.syncError == true" [icon]="syncError"></fa-icon>
-								</div>
-								<div>{{ player.PlayerName }}</div>
-								<div class="latestAlias">{{ player.LatestAlias }}</div>
-							</div>
-						</div>
-						<div class="footer">
-							<div class="action-buttons">
-								<dx-button stylingMode="contained" text="Get Data" type="default" [width]="120" (onClick)="getPlayerGameStats(player)"> </dx-button>
-								<dx-button stylingMode="contained" text="Sync Player Data" type="default" [width]="120" (onClick)="syncPlayerData(player)">
-								</dx-button>
-							</div>
-						</div>
-					</div>
-				</div>
+				<app-player-card [player]="player" (getPlayersEvent)="getPlayers()" (getPlayerStatsEvent)="getPlayerGameStats($event)" (syncPlayerEvent)="syncPlayerData($event)"></app-player-card>
 			</ng-container>
 		</div>
 	</div>

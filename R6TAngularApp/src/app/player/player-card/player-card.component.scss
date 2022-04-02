@@ -1,0 +1,96 @@
+.player {
+	// display: grid;
+	// grid-template-columns: 1fr 1fr 1fr 1fr;
+
+	display: inline-flex;
+	height: 100px;
+	width: 250px;
+
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	padding: 5px;
+	margin-bottom: 10px;
+
+	// &:hover {
+	//   background-color: aquamarine;
+	// }
+
+	.sync {
+		width: 20px;
+		display: inline-flex;
+		float: right;
+	}
+
+	.card {
+		width: 250px;
+
+		.body {
+			display: grid;
+			grid-template-columns: 50px 250px;
+
+			.imgRank {
+				width: 50px;
+			}
+
+			.latestAlias {
+				font-size: 11px;
+			}
+		}
+
+		.action-buttons {
+			dx-button {
+				margin-right: 5px;
+			}
+		}
+	}
+
+	.mmr {
+		float: right;
+	}
+
+	.toolbarIcons {
+		fa-icon {
+			font-size: 12px;
+			margin-right: 3px;
+
+			&.syncStart {
+				color: rgb(0, 0, 0);
+			}
+
+			&.syncSuccess {
+				color: rgb(0, 106, 0);
+			}
+
+			&.syncError {
+				color: rgb(181, 0, 0);
+			}
+		}
+
+		.isActive {
+			cursor: pointer;
+
+			&.active {
+				color: rgb(0, 106, 0);
+			}
+
+			&.inActive {
+				color: rgb(181, 0, 0);
+			}
+		}
+
+		.link {
+			cursor: pointer;
+			color: #c76500;
+		}
+
+		img {
+			width: 19px;
+			vertical-align: bottom;
+		}
+
+		.sortButton {
+			cursor: pointer;
+			color: rgb(0, 106, 0);
+		}
+	}
+}

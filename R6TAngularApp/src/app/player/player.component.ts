@@ -1,17 +1,5 @@
 import { PlayerService } from './../services/player.service';
 import { Component, OnInit } from '@angular/core';
-import {
-	faAngleDown,
-	faAngleUp,
-	faArrowDown,
-	faArrowUp,
-	faCheckCircle,
-	faCoffee,
-	faExclamationCircle,
-	faExternalLinkAlt,
-	faPowerOff,
-	faYinYang,
-} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-player',
@@ -21,14 +9,6 @@ import {
 export class PlayerComponent implements OnInit {
 	players: any = [];
 	playerGameStats: any = [];
-
-	syncStart = faYinYang;
-	syncSuccess = faCheckCircle;
-	syncError = faExclamationCircle;
-	powerOff = faPowerOff;
-	link = faExternalLinkAlt;
-	sortUp = faArrowUp;
-	sortDown = faArrowDown;
 
 	currentPlayerGrid: any = null;
 
@@ -84,17 +64,9 @@ export class PlayerComponent implements OnInit {
 		);
 	}
 
-	setActive(player: any) {
-		this.playerService.setActive(player).subscribe((res) => {
-			this.getPlayers();
-		});
-	}
 
-	gotoR6Tracker(player: any) {
-		if (player.Url && player.Url != '') {
-			window.open(player.Url);
-		}
-	}
+
+
 
 	public syncAllPlayers() {
 		this.players.forEach((player: any) => {
@@ -107,10 +79,4 @@ export class PlayerComponent implements OnInit {
 		d.showToolTip = !d.showToolTip;
 	}
 
-	setSort(player: any, type: string) {
-		player.SortType = type;
-		this.playerService.setSort(player).subscribe((res) => {
-			this.getPlayers();
-		});
-	}
 }

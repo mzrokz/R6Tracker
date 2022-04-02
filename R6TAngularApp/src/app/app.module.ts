@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { PlayerComponent } from './player/player.component';
 import { AddPlayerComponent } from './player/add-player/add-player.component';
 import { FormsModule } from '@angular/forms';
+import { PlayerCardComponent } from './player/player-card/player-card.component';
 
 const DxiModules = [
 	// DX -------------------
@@ -22,7 +23,7 @@ const DxiModules = [
 	DxiColumnModule,
 ];
 @NgModule({
-	declarations: [AppComponent, PlayerComponent, AddPlayerComponent],
+	declarations: [AppComponent, PlayerComponent, AddPlayerComponent, PlayerCardComponent],
 	imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule, ...DxiModules, FontAwesomeModule],
 	providers: [],
 	bootstrap: [AppComponent],
