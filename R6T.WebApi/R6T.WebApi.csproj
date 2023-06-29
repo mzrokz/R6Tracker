@@ -357,9 +357,9 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\R6T.Model\R6T.Model.csproj">
+    <ProjectReference Include="..\R6T.Model\R6T.Model_old.csproj">
       <Project>{eff2ce21-4425-45fe-9707-a041dddde376}</Project>
-      <Name>R6T.Model</Name>
+      <Name>R6T.Model_old</Name>
     </ProjectReference>
     <ProjectReference Include="..\R6T.Scraper\R6T.Scraper.csproj">
       <Project>{96e4aaca-a797-418e-aed2-435bb37985b0}</Project>

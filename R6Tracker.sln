@@ -1,17 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6Tracker.WinFormApp", "R6Tracker.WinFormApp\R6Tracker.WinFormApp.csproj", "{30CE3FE9-439E-46FC-BCF3-36544DC80D11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R6T.Scraper", "R6T.Scraper\R6T.Scraper.csproj", "{96E4AACA-A797-418E-AED2-435BB37985B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.Model", "R6T.Model\R6T.Model.csproj", "{EFF2CE21-4425-45FE-9707-A041DDDDE376}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.Model_old", "R6T.Model_old\R6T.Model_old.csproj", "{EFF2CE21-4425-45FE-9707-A041DDDDE376}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.Service", "R6T.Service\R6T.Service.csproj", "{6B79C077-3591-4D28-B7AF-FA70DF976827}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R6T.WebApi", "R6T.WebApi\R6T.WebApi.csproj", "{809D442B-044C-48ED-AAB6-8F1FB93018B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R6T.Model", "R6T.Model\R6T.Model.csproj", "{14A0FBB6-A788-4617-B366-15D0821885F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTestApi", "DBTestApi\DBTestApi.csproj", "{8A1BC4EF-3FF6-46C7-B724-F3B3D6E0D3BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{809D442B-044C-48ED-AAB6-8F1FB93018B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A0FBB6-A788-4617-B366-15D0821885F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A0FBB6-A788-4617-B366-15D0821885F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A0FBB6-A788-4617-B366-15D0821885F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A0FBB6-A788-4617-B366-15D0821885F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A1BC4EF-3FF6-46C7-B724-F3B3D6E0D3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A1BC4EF-3FF6-46C7-B724-F3B3D6E0D3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A1BC4EF-3FF6-46C7-B724-F3B3D6E0D3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A1BC4EF-3FF6-46C7-B724-F3B3D6E0D3BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

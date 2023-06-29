@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\R6T.Model\R6T.Model.csproj" />
+    <ProjectReference Include="..\R6T.Model\R6T.Model_old.csproj" />
   </ItemGroup>
 
 </Project>

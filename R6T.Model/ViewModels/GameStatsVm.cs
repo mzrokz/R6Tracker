@@ -1,4 +1,5 @@
-﻿using System;
+﻿using R6T.Model.Context.R6Tracker;
+using System;
 
 namespace R6T.Model.ViewModels
 {
@@ -125,7 +126,7 @@ namespace R6T.Model.ViewModels
         public Nullable<int> MMR { get; set; }
 
         public GameStatsVm Difference { get; set; }
-        public MatchType MatchType { get; set; }
+        public Context.R6Tracker.MatchType MatchType { get; set; }
         public Player Player { get; set; }
 
     }

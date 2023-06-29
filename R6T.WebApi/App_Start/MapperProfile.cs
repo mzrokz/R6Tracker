@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using R6T.Model.ViewModels;
+using R6T..ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
